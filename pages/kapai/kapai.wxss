@@ -1,0 +1,25 @@
+.header{
+    text-align: center;
+    font-size: 140%;
+    font-weight: bold;
+    color: #1F4499;
+    padding: 10px;
+}
+.author{
+    text-align: center;
+    color: #3273dc;
+    font-size: 80%;
+}
+.fgx{
+    height: 1px !important;
+    margin: 5px 0 !important;
+    background-color: cornflowerblue;
+}
+.guancangbtns{
+    display: flex;
+    justify-content: space-evenly;
+}
+.collection{
+    display: flex;
+    justify-content: center;
+}

@@ -1,12 +1,13 @@
-<view wx:if="{{canIUse}}">
+<block wx:if="{{canIUse}}">
     <view class="header">
         <image src="{{login_pic}}"></image>
     </view>
-    <view class='content'>
+    <!-- <view class='content'>
         <view>申请获取以下权限</view>
         <text>获得你的公开信息(昵称，头像等)</text>
-    </view>
+    </view> -->
     <button class="loginBtn" wx:if="{{!hasUserInfo && canIUse}}"
             open-type="getUserInfo"
             bindgetuserinfo="getUserInfo">授权登录</button>
-</view>
+    <button class="loginBtn" wx:else bindtap="toKapai">进入卡牌对比</button>
+</block>

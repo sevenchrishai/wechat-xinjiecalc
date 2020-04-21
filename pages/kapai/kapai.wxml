@@ -1,0 +1,34 @@
+<view>
+    <view class="header">{{title}}</view>
+    <view class="author">@山药攻略组 | @sevenchrishai</view>
+    <view class="fgx"></view>
+    <view class="page1">
+        <view class="guancangbtns">
+            <button type="primary" size="mini" bindtap="toggleGuanc">
+                {{collectionFlag?'隐藏':'显示'}}馆藏
+            </button>
+            <button type="primary" size="mini" bindtap="toggleKapaiku">
+                {{cards?'关闭':'打开'}}卡牌库
+            </button>
+        </view>
+        <view class="collection" wx:if="{{collectionFlag}}">
+            <view class="guancang">
+                <view>馆藏</view>
+                <block wx:for="{{collection}}" wx:key="index">
+                    <view>{{item.name}}</view>
+                </block>
+            </view>
+            <view class="dengji">
+                <view class="section">
+                    <view class="section__title">等级</view>
+                    <picker bindchange="bindPickerChange" value="{{index}}" range="{{guanCangLevelArray}}">
+                        <view class="picker">
+                            {{array[index]}}
+                        </view>
+                    </picker>
+                </view>
+            </view>
+        </view>
+    </view>
+
+</view>
