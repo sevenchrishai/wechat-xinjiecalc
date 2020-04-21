@@ -1,5 +1,7 @@
 {
   "pages":[
+    "pages/login/login",
+    "pages/kapai/kapai",
     "pages/index/index",
     "pages/logs/logs"
   ],

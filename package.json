@@ -1,0 +1,22 @@
+{
+  "name": "wechat-xinjiecalc",
+  "version": "1.0.0",
+  "description": "闪耀暖暖-卡牌对比（小程序项目）",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sevenchrishai/wechat-xinjiecalc.git"
+  },
+  "author": "chris",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sevenchrishai/wechat-xinjiecalc/issues"
+  },
+  "homepage": "https://github.com/sevenchrishai/wechat-xinjiecalc#readme",
+  "dependencies": {
+    "@types/weapp-api": "0.0.6"
+  }
+}
