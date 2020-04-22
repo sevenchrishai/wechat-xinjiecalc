@@ -2,33 +2,150 @@
     <view class="header">{{title}}</view>
     <view class="author">@山药攻略组 | @sevenchrishai</view>
     <view class="fgx"></view>
-    <view class="page1">
+    <view class="page">
         <view class="guancangbtns">
-            <button type="primary" size="mini" bindtap="toggleGuanc">
+            <button type="primary" bindtap="toggleGuanc">
                 {{collectionFlag?'隐藏':'显示'}}馆藏
             </button>
-            <button type="primary" size="mini" bindtap="toggleKapaiku">
+            <button type="primary" bindtap="toggleKapaiku">
                 {{cards?'关闭':'打开'}}卡牌库
             </button>
         </view>
-        <view class="collection" wx:if="{{collectionFlag}}">
-            <view class="guancang">
-                <view>馆藏</view>
-                <block wx:for="{{collection}}" wx:key="index">
-                    <view>{{item.name}}</view>
-                </block>
-            </view>
-            <view class="dengji">
-                <view class="section">
+        <block wx:if="{{collectionFlag}}">
+            <view class="collection">
+                <view class="guancang coll-item">
+                    <view>馆藏</view>
+                    <block wx:for="{{collection}}" wx:key="index">
+                        <view>{{item.name}}</view>
+                    </block>
+                </view>
+                <view class="dengji coll-item">
                     <view class="section__title">等级</view>
-                    <picker bindchange="bindPickerChange" value="{{index}}" range="{{guanCangLevelArray}}">
-                        <view class="picker">
-                            {{array[index]}}
+                    <block wx:for="{{collection}}" wx:key="index">
+                        <view>
+                            <picker bindchange="guanCangBindPickerChange" value="{{item.level}}" data-index="{{index}}"
+                                    range="{{guanCangLevelArray}}">
+                                <view class="picker">
+                                    {{guanCangLevelArray[item.level]}}
+                                </view>
+                            </picker>
                         </view>
-                    </picker>
+                    </block>
                 </view>
             </view>
-        </view>
+            <view class="saveBtn">
+                <button type="primary" bindtap="saveCollection">保存</button>
+            </view>
+        </block>
+        <block wx:if="{{cards}}">
+            <view class="kapaiku m10">
+                <radio-group bindchange="allPropChange">
+                    <radio class="radio" wx:for-items="{{propObj}}" wx:key="index" value="{{item.id}}" checked="{{item.checked}}">
+                        <text>{{item.name}}</text>
+                    </radio>
+                </radio-group>
+                <view class="bodysC">
+                    <view>
+                        <text class="mr-10">角色</text>
+                        <picker bindchange="getAllRole" value="allPropRoleIndex"
+                                range="{{allPropRoleArr}}" range-key="{{'dataName'}}">
+                            <view class="picker">
+                                {{allPropRoleArr[allPropRoleIndex].dataName}}
+                            </view>
+                        </picker>
+                    </view>
+                    <view>
+                        <switch type="checkbox" checked="{{allRoleObj.isFusu}}" bindchange="allRoleFusChange"/>复苏
+                    </view>
+                    <view>
+                        <text class="guanName">({{makeupData[allRoleObj.propRoleKey][13]}})</text>
+                    </view>
+                </view>
+                <!--
+                <view class="bodysC">
+                    <view>
+                        <text class="mr-10">等级</text>
+                        <select name="Star2" v-model="allRoleObj.roleLevelVal">
+                            <option v-for="count in 80" :value="count">{{count}}</option>
+                        </select>
+                    </view>
+                    <div>星级
+                        <select name="Star2" v-model="allRoleObj.starVal">
+                            <option v-for="(item,index) in starArr" :value="index">{{item}}</option>
+                        </select>
+                    </div>
+                    <div>
+                        馆藏
+                        <select name="ComboLevel" v-model="allRoleObj.collectVal">
+                            <option v-for="count in 8" :value="count-1">{{count-1}}</option>
+                        </select>
+                    </div>
+                </view>
+                <div class="bodysC">
+                    <div>影之召唤
+                    </div>
+                    <div>
+                        <select name="ComboA" disabled="disabled" v-model="allRoleObj.shadowVal">
+                            <option v-for="(item,index) in shadowArr" :value="index">{{item}}</option>
+                        </select>
+                    </div>
+                    <div>等级
+                        <select name="SkllLevel2" v-model="allRoleObj.shadowLevelVal">
+                            <option v-for="count in 5" :value="count">{{count}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="bodysC">
+                    <div>
+                        被动
+                    </div>
+                    <div>
+                        <select name="ComboP2" disabled="disabled" v-model="allRoleObj.passiveSkillVal1">
+                            <option v-for="(item,index) in passiveSkillArr" :value="index">{{item}}</option>
+                        </select>
+                        <select name="ComboP1Level" v-model="allRoleObj.passiveSkillLevelVal1">
+                            <option v-for="count in 5" :value="count">{{count}}</option>
+                        </select>
+                    </div>
+                    <div>
+                        <select name="ComboP2" disabled="disabled" v-model="allRoleObj.passiveSkillVal2">
+                            <option v-for="(item,index) in passiveSkillArr" :value="index">{{item}}</option>
+                        </select>
+                        <select name="ComboP2Level" v-model="allRoleObj.passiveSkillLevelVal2">
+                            <option v-for="count in 5" :value="count">{{count}}</option>
+                        </select>
+                    </div>
+                    <div>
+                        <select name="ComboP3" disabled="disabled" v-model="allRoleObj.passiveSkillVal3">
+                            <option v-for="(item,index) in passiveSkillArr" :value="index">{{item}}</option>
+                        </select>
+                        <select name="ComboP3Level" v-model="allRoleObj.passiveSkillLevelVal3">
+                            <option v-for="count in 5" :value="count">{{count}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="bodysC">
+                    <div>
+                        核心印象
+                    </div>
+                    <div>
+                        <select name="ChoseYX" v-model="allRoleObj.coreImpressionTypeVal">
+                            <option v-for="(item,key,index) in coreImpressionTypeObj" :value="key">{{item}}</option>
+                        </select>
+                        <select name="YXRank" v-model="allRoleObj.coreImpressionVal" @change="allCoreImpressionChange">
+                            <option v-for="(item,key,index) in coreImpressionObj" :value="key">{{item}}</option>
+                        </select>
+                        <select name="YXLevel" v-model="allRoleObj.coreImpressionLevelVal">
+                            <option v-for="(item,key,index) in coreImpressionLevelObj" :value="key">{{item}}</option>
+                        </select>
+                    </div>
+                </div>
+                -->
+
+
+            </view>
+        </block>
     </view>
+    <view class="fgx"></view>
 
 </view>

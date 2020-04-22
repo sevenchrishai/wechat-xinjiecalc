@@ -6,20 +6,21 @@ const util = require('../../utils/util.js')
 Page({
     data: {
         title: '卡牌对比计算器',
-        guanCangLevelArray: [1,2,3,4,5,6,7,8],
-        propObj: {
-            1: '典雅',
-            2: '清新',
-            3: '甜美',
-            4: '性感',
-            5: '帅气'
-        },
+        guanCangLevelArray: ['0','1','2','3','4','5','6','7'],
+        propObj: [
+            {id: '1',name: '典雅',checked: true},
+            {id: '2',name: '清新',checked: false},
+            {id: '3',name: '甜美',checked: false},
+            {id: '4',name: '性感',checked: false},
+            {id: '5',name: '帅气',checked: false}
+        ],
         allPropKey: '1',// 卡牌库绑定的属性radio
         mainPropKey: '1',// 卡牌1绑定的属性radio
         secondPropKey: '1',// 卡牌2绑定的属性radio
         mainPropScore: 0,//卡牌1印象总分
         secondPropScore: 0,//卡牌2印象总分
         allPropRoleArr: [],//卡牌库中选中的属性对应的角色列表
+        allPropRoleIndex: 0,
         mainPropRoleArr: [],//卡牌1中选中的属性对应的角色列表
         secondPropRoleArr: [],//卡牌2中选中的属性对应的角色列表
         allRoleObj:{
@@ -879,6 +880,10 @@ Page({
         })
         // 获取馆藏
         _this.getCollection()
+        // 获取星级
+        _this.getStarArr()
+        // 获取卡牌库初始角色属性（默认是典雅）
+        _this.allPropChange();
     },
     // 事件event
     toggleGuanc() {
@@ -909,18 +914,153 @@ Page({
             })
         }
     },
+    guanCangBindPickerChange(e) {
+        console.log(e)
+        console.log('picker发送选择改变，携带值为', e.detail.value)
+        let index = e.currentTarget.dataset.index;  //索引
+        let tmpCol = this.data.collection
+        for (let key in this.data.collection) {
+            if (key == index) {
+                tmpCol[index].level = e.detail.value
+            }
+        }
+        this.setData({
+            collection: tmpCol
+        })
+    },
+    // 卡牌库-属性-change事件
+    allPropChange(e){
+        let _this = this;
+        if (e && e.detail.value) {
+            console.log(e)
+            console.log('radio发生change事件，携带value值为：', e.detail.value)
+            _this.setData({
+                allPropKey: e.detail.value
+            })
+            _this.setData({
+                allPropRoleIndex: '0',
+            })
+        }
+        _this.getAllPropRoleObj()
+        _this.getAllRole()
+    },
+    // 卡牌库-获取选中属性的角色列表 allPropRoleArr
+    getAllPropRoleObj(){
+        let _this = this;
+        let tmpArr = []
+        for (let i =1; i<=_this.data.makeupSum; i++) {
+            if (_this.data.makeupData[i][2]>=4) {//稀有度 非凡以上
+                if (_this.data.makeupData[i][3]==_this.data.allPropKey) {//选中的主属性
+                    let item = {}
+                    item.dataIndex = i;
+                    item.dataName = _this.data.makeupData[i][1]+"-"+_this.data.makeupData[i][0];
+                    item.dataType = _this.data.makeupData[i][2]
+                    // _this.allPropRoleArr.push(item)
+                    tmpArr.push(item)
+                }
+            }
+        }
+        tmpArr.sort(function(x,y){return y.dataType-x.dataType});
+        _this.setData({
+            allPropRoleArr: tmpArr,
+        })
+        console.log('卡牌库-角色列表',_this.data.allPropRoleArr)
+        _this.setData({
+            'allRoleObj.propRoleKey': _this.data.allPropRoleArr[0].dataIndex,
+            'allRoleObj.propRoleVal': _this.data.allPropRoleArr[0].dataName
+        })
+    },
+    // 卡牌库-是否复苏-change事件
+    allRoleFusChange(e) {
+        console.log(e)
+        console.log('switch发生change事件，携带值为', e.detail.value)
+        this.setData({
+            'allRoleObj.isFusu': e.detail.value
+        })
+    },
+    // 卡牌库-如果localStorage里已存在，获取选中角色的属性对象allRoleObj，否则取初始值;角色-change事件
+    getAllRole(e){
+        let _this = this;
+        if (e && e.detail.value) {
+            console.log(e)
+            console.log('picker发生change事件，携带value值为：', e.detail.value)
+            _this.setData({
+                allPropRoleIndex: e.detail.value,
+            })
+            _this.setData({
+                'allRoleObj.propRoleKey': _this.data.allPropRoleArr[_this.data.allPropRoleIndex].dataIndex,
+                'allRoleObj.propRoleVal': _this.data.allPropRoleArr[_this.data.allPropRoleIndex].dataName
+            })
+        }
+        let allRoleKeyStorage = util.getLocalStorage(_this.data.allRoleKey+_this.data.allRoleObj.propRoleKey);
+        if(allRoleKeyStorage && JSON.parse(allRoleKeyStorage).propRoleKey == _this.data.allRoleObj.propRoleKey){
+            _this.setData({
+                allRoleObj: JSON.parse(allRoleKeyStorage)
+            })
+        } else {
+            let allroleobj = _this.getAllPassiveSkillVal(_this.data.allRoleObj, _this.data.allPropRoleArr)
+            let allroleobjgc = _this.getAllRoleCollection(_this.data.allRoleObj)
+            allroleobj.collectVal = allroleobjgc
+            _this.setData({
+                allRoleObj: allroleobj
+            })
+        }
+        console.log('卡牌库-角色属性', _this.data.allRoleObj)
+    },
+    // 通用方法-获取选中角色影子技能和被动技能-初始值
+    getAllPassiveSkillVal(roleObj, propRoleArr){
+        let _this = this;
+        if (roleObj && propRoleArr) {
+            roleObj.propRoleVal = '';
+            try {
+                let tmpItem = propRoleArr.find(function(item,index){return item.dataIndex == roleObj.propRoleKey})
+                if (tmpItem) {
+                    roleObj.propRoleVal = tmpItem.dataName;
+                }
+            } catch (e) {
+            }
+            roleObj.shadowVal = _this.data.makeupData[roleObj.propRoleKey][9];
+            roleObj.shadowLevelVal = 1;
+            roleObj.passiveSkillVal1 = _this.data.makeupData[roleObj.propRoleKey][10]+1;
+            roleObj.passiveSkillVal2 = _this.data.makeupData[roleObj.propRoleKey][11]+1;
+            roleObj.passiveSkillVal3 = _this.data.makeupData[roleObj.propRoleKey][12]+1;
+            roleObj.passiveSkillLevelVal1 = 1;
+            roleObj.passiveSkillLevelVal2 = 1;
+            roleObj.passiveSkillLevelVal3 = 1;
+        }
+        return roleObj;
+    },
+    // 通用方法-获取选中角色对应的馆藏等级-初始值(馆藏列表也存了localStorage)
+    getAllRoleCollection(roleObj){
+        let _this = this;
+        let gcName = _this.data.makeupData[roleObj.propRoleKey][13];
+        if (_this.data.collection){
+            _this.data.collection.forEach(function (item) {
+                if (item.name == gcName){
+                    roleObj.collectVal = item.level
+                }
+            })
+        }
+        return roleObj.collectVal;
+    },
+    // 保存馆藏localstorage
+    saveCollection() {
+        util.setLocalStorage(this.data.collectionKey, this.data.collection);
+    },
     // 页面初始加载function
     // 获取馆藏localstorage
     getCollection(){
         //[{name:'白日梦少女',level:1}]
         let _this = this;
         if (util.getLocalStorage(_this.data.collectionKey)) {
-            _this.data.collection = JSON.parse(util.getLocalStorage(_this.data.collectionKey));
+            _this.setData({
+                collection: JSON.parse(util.getLocalStorage(_this.data.collectionKey))
+            })
         } else {
             var arr=[]
             for (let key in _this.data.makeupData) {
                 var val=_this.data.makeupData[key][13]
-                var level = 0;//设置馆藏的初始等级
+                var level = _this.data.guanCangLevelArray[0];//设置馆藏的初始等级
                 var tempObj = {}
                 tempObj.name = val;
                 tempObj.level = level;
@@ -936,5 +1076,19 @@ Page({
             })
         }
         console.log(_this.data.collection)
+    },
+    // 获取星级数组
+    getStarArr(){
+        let _this = this;
+        let tmpArr = []
+        for (let i =1;i<=4; i++) {
+            for (let j =0;j<=5; j++) {
+                tmpArr.push(i+"星"+j+"阶");
+            }
+        }
+        tmpArr.push("5星0阶")
+        _this.setData({
+            starArr: tmpArr
+        })
     },
 })
