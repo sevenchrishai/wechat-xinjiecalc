@@ -26,7 +26,7 @@
                             <picker bindchange="guanCangBindPickerChange" value="{{item.level}}" data-index="{{index}}"
                                     range="{{guanCangLevelArray}}">
                                 <view class="picker">
-                                    {{guanCangLevelArray[item.level]}}
+                                    {{item.level}}
                                 </view>
                             </picker>
                         </view>
@@ -47,10 +47,10 @@
                 <view class="bodysC">
                     <view>
                         <text class="mr-10">角色</text>
-                        <picker bindchange="getAllRole" value="allPropRoleIndex"
+                        <picker bindchange="getAllRole" value="{{allRoleObj.propRoleVal}}"
                                 range="{{allPropRoleArr}}" range-key="{{'dataName'}}">
                             <view class="picker">
-                                {{allPropRoleArr[allPropRoleIndex].dataName}}
+                                {{allRoleObj.propRoleVal}}
                             </view>
                         </picker>
                     </view>
@@ -61,87 +61,97 @@
                         <text class="guanName">({{makeupData[allRoleObj.propRoleKey][13]}})</text>
                     </view>
                 </view>
-                <!--
                 <view class="bodysC">
                     <view>
                         <text class="mr-10">等级</text>
-                        <select name="Star2" v-model="allRoleObj.roleLevelVal">
-                            <option v-for="count in 80" :value="count">{{count}}</option>
-                        </select>
+                        <picker bindchange="allLevelChange" value="{{allRoleObj.roleLevelVal}}" range="{{allLevelArr}}">
+                            <view class="picker">
+                                {{allRoleObj.roleLevelVal}}
+                            </view>
+                        </picker>
                     </view>
-                    <div>星级
-                        <select name="Star2" v-model="allRoleObj.starVal">
-                            <option v-for="(item,index) in starArr" :value="index">{{item}}</option>
-                        </select>
-                    </div>
-                    <div>
-                        馆藏
-                        <select name="ComboLevel" v-model="allRoleObj.collectVal">
-                            <option v-for="count in 8" :value="count-1">{{count-1}}</option>
-                        </select>
-                    </div>
+                    <view>
+                        <text class="mr-10">星级</text>
+                        <picker bindchange="allStarChange" value="{{allRoleObj.starVal}}" range="{{starArr}}">
+                            <view class="picker">
+                                {{starArr[allRoleObj.starVal]}}
+                            </view>
+                        </picker>
+                    </view>
+                    <view>
+                        <text class="mr-10">馆藏</text>
+                        <picker bindchange="allGuancChange" value="{{allRoleObj.collectVal}}" range="{{guanCangLevelArray}}">
+                            <view class="picker">
+                                {{allRoleObj.collectVal}}
+                            </view>
+                        </picker>
+                    </view>
                 </view>
-                <div class="bodysC">
-                    <div>影之召唤
-                    </div>
-                    <div>
-                        <select name="ComboA" disabled="disabled" v-model="allRoleObj.shadowVal">
-                            <option v-for="(item,index) in shadowArr" :value="index">{{item}}</option>
-                        </select>
-                    </div>
-                    <div>等级
-                        <select name="SkllLevel2" v-model="allRoleObj.shadowLevelVal">
-                            <option v-for="count in 5" :value="count">{{count}}</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="bodysC">
-                    <div>
-                        被动
-                    </div>
-                    <div>
-                        <select name="ComboP2" disabled="disabled" v-model="allRoleObj.passiveSkillVal1">
-                            <option v-for="(item,index) in passiveSkillArr" :value="index">{{item}}</option>
-                        </select>
-                        <select name="ComboP1Level" v-model="allRoleObj.passiveSkillLevelVal1">
-                            <option v-for="count in 5" :value="count">{{count}}</option>
-                        </select>
-                    </div>
-                    <div>
-                        <select name="ComboP2" disabled="disabled" v-model="allRoleObj.passiveSkillVal2">
-                            <option v-for="(item,index) in passiveSkillArr" :value="index">{{item}}</option>
-                        </select>
-                        <select name="ComboP2Level" v-model="allRoleObj.passiveSkillLevelVal2">
-                            <option v-for="count in 5" :value="count">{{count}}</option>
-                        </select>
-                    </div>
-                    <div>
-                        <select name="ComboP3" disabled="disabled" v-model="allRoleObj.passiveSkillVal3">
-                            <option v-for="(item,index) in passiveSkillArr" :value="index">{{item}}</option>
-                        </select>
-                        <select name="ComboP3Level" v-model="allRoleObj.passiveSkillLevelVal3">
-                            <option v-for="count in 5" :value="count">{{count}}</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="bodysC">
-                    <div>
-                        核心印象
-                    </div>
-                    <div>
-                        <select name="ChoseYX" v-model="allRoleObj.coreImpressionTypeVal">
-                            <option v-for="(item,key,index) in coreImpressionTypeObj" :value="key">{{item}}</option>
-                        </select>
-                        <select name="YXRank" v-model="allRoleObj.coreImpressionVal" @change="allCoreImpressionChange">
-                            <option v-for="(item,key,index) in coreImpressionObj" :value="key">{{item}}</option>
-                        </select>
-                        <select name="YXLevel" v-model="allRoleObj.coreImpressionLevelVal">
-                            <option v-for="(item,key,index) in coreImpressionLevelObj" :value="key">{{item}}</option>
-                        </select>
-                    </div>
-                </div>
-                -->
-
+                <view class="bodysC">
+                    <view>影之召唤</view>
+                    <view>{{shadowArr[allRoleObj.shadowVal]}}</view>
+                    <view>
+                        <text class="mr-10">等级</text>
+                        <picker bindchange="allShadowChange" value="{{allRoleObj.shadowLevelVal}}" range="{{allShadowLevelArr}}">
+                            <view class="picker">
+                                {{allRoleObj.shadowLevelVal}}
+                            </view>
+                        </picker>
+                    </view>
+                </view>
+                <view class="bodysC">
+                    <view>被动</view>
+                    <view>
+                        <text class="mr-10">{{passiveSkillArr[allRoleObj.passiveSkillVal1]}}</text>
+                        <picker bindchange="allSkill1Change" value="{{allRoleObj.passiveSkillLevelVal1}}" range="{{allShadowLevelArr}}">
+                            <view class="picker">
+                                {{allRoleObj.passiveSkillLevelVal1}}
+                            </view>
+                        </picker>
+                    </view>
+                    <view>
+                        <text class="mr-10">{{passiveSkillArr[allRoleObj.passiveSkillVal2]}}</text>
+                        <picker bindchange="allSkill2Change" value="{{allRoleObj.passiveSkillLevelVal2}}" range="{{allShadowLevelArr}}">
+                            <view class="picker">
+                                {{allRoleObj.passiveSkillLevelVal2}}
+                            </view>
+                        </picker>
+                    </view>
+                    <view>
+                        <text class="mr-10">{{passiveSkillArr[allRoleObj.passiveSkillVal3]}}</text>
+                        <picker bindchange="allSkill3Change" value="{{allRoleObj.passiveSkillLevelVal3}}" range="{{allShadowLevelArr}}">
+                            <view class="picker">
+                                {{allRoleObj.passiveSkillLevelVal3}}
+                            </view>
+                        </picker>
+                    </view>
+                </view>
+                <view class="bodysC">
+                    <view>核心印象</view>
+                    <view>
+                        <picker class="mr-10" bindchange="allCoreImpressionTypeChange" value="{{allRoleObj.coreImpressionTypeVal}}"
+                                range="{{coreImpressionTypeObj}}" range-key="{{'name'}}">
+                            <view class="picker">
+                                {{allRoleObj.coreImpressionTypeValName}}
+                            </view>
+                        </picker>
+                        <picker class="mr-10" bindchange="allCoreImpressionChange" value="{{allRoleObj.coreImpressionVal}}"
+                                range="{{coreImpressionObj}}" range-key="{{'name'}}">
+                            <view class="picker">
+                                {{allRoleObj.coreImpressionValName}}
+                            </view>
+                        </picker>
+                        <picker class="mr-10" bindchange="allCoreImpressionLevelChange" value="{{allRoleObj.coreImpressionLevelVal}}"
+                                range="{{coreImpressionLevelObj}}" range-key="{{'name'}}">
+                            <view class="picker">
+                                {{allRoleObj.coreImpressionLevelValName}}
+                            </view>
+                        </picker>
+                    </view>
+                </view>
+                <view class="saveBtn">
+                    <button type="primary" bindtap="saveCards">保存</button>
+                </view>
 
             </view>
         </block>

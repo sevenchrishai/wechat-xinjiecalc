@@ -14,13 +14,14 @@ Page({
             {id: '4',name: '性感',checked: false},
             {id: '5',name: '帅气',checked: false}
         ],
+        allLevelArr: [],
+        allShadowLevelArr: ['1','2','3','4','5'],
         allPropKey: '1',// 卡牌库绑定的属性radio
         mainPropKey: '1',// 卡牌1绑定的属性radio
         secondPropKey: '1',// 卡牌2绑定的属性radio
         mainPropScore: 0,//卡牌1印象总分
         secondPropScore: 0,//卡牌2印象总分
         allPropRoleArr: [],//卡牌库中选中的属性对应的角色列表
-        allPropRoleIndex: 0,
         mainPropRoleArr: [],//卡牌1中选中的属性对应的角色列表
         secondPropRoleArr: [],//卡牌2中选中的属性对应的角色列表
         allRoleObj:{
@@ -39,8 +40,11 @@ Page({
             passiveSkillVal3: 0,
             passiveSkillLevelVal3:1,
             coreImpressionVal: 2,
+            coreImpressionValName: '稀有',
             coreImpressionLevelVal: 5,
+            coreImpressionLevelValName: '深化5花',
             coreImpressionTypeVal: 1,
+            coreImpressionTypeValName: '提供心之技能分数',
         },//卡牌库中选中的角色的属性对象
         mainRoleObj:{
             propRoleKey: '',//角色
@@ -83,24 +87,24 @@ Page({
         starArr: [],
         shadowArr: ['闪耀瞬间得分提升','某个环节使用额外得分','10秒内心之技能得分提升','20秒内心之技能得分提升','额外闪耀瞬间','功能卡'],
         passiveSkillArr: ['无','头发','衣服','鞋子','饰品'],
-        coreImpressionObj: {
-            1: '普通',
-            2: '稀有',
-            3: '非凡',
-            5: '非凡-鹿',
-            4: '闪耀'
-        },
-        coreImpressionLevelObj: {
-            1: '深化1花',
-            2: '深化2花',
-            3: '深化3花',
-            4: '深化4花',
-            5: '深化5花'
-        },
-        coreImpressionTypeObj: {
-            1: '提供心之技能分数',
-            2: '提供影之召唤分数',
-        },
+        coreImpressionObj: [
+            {id: 1, name: '普通'},
+            {id: 2, name: '稀有'},
+            {id: 3, name: '非凡'},
+            {id: 5, name: '非凡-鹿'},
+            {id: 4, name: '闪耀'}
+        ],
+        coreImpressionLevelObj: [
+            {id: 1, name: '深化1花'},
+            {id: 2, name: '深化2花'},
+            {id: 3, name: '深化3花'},
+            {id: 4, name: '深化4花'},
+            {id: 5, name: '深化5花'}
+        ],
+        coreImpressionTypeObj: [
+            {id: 1, name: '提供心之技能分数'},
+            {id: 2, name: '提供影之召唤分数'}
+        ],
         czMode: 1,
         mainPower: 0,
         mainScore: 0,
@@ -882,6 +886,8 @@ Page({
         _this.getCollection()
         // 获取星级
         _this.getStarArr()
+        // 获取等级
+        _this.getAllLevelArr()
         // 获取卡牌库初始角色属性（默认是典雅）
         _this.allPropChange();
     },
@@ -914,6 +920,7 @@ Page({
             })
         }
     },
+    // 馆藏storage-等级-change
     guanCangBindPickerChange(e) {
         console.log(e)
         console.log('picker发送选择改变，携带值为', e.detail.value)
@@ -936,9 +943,6 @@ Page({
             console.log('radio发生change事件，携带value值为：', e.detail.value)
             _this.setData({
                 allPropKey: e.detail.value
-            })
-            _this.setData({
-                allPropRoleIndex: '0',
             })
         }
         _this.getAllPropRoleObj()
@@ -970,12 +974,87 @@ Page({
             'allRoleObj.propRoleVal': _this.data.allPropRoleArr[0].dataName
         })
     },
-    // 卡牌库-是否复苏-change事件
+    // 卡牌库-是否复苏-change
     allRoleFusChange(e) {
         console.log(e)
-        console.log('switch发生change事件，携带值为', e.detail.value)
+        console.log('发生change事件，携带值为', e.detail.value)
         this.setData({
             'allRoleObj.isFusu': e.detail.value
+        })
+    },
+    // 卡牌库-角色等级-change
+    allLevelChange(e) {
+        console.log('发生change事件，携带值为', e.detail.value)
+        this.setData({
+            'allRoleObj.roleLevelVal': this.data.allLevelArr[e.detail.value]
+        })
+    },
+    // 卡牌库-角色星级-change
+    allStarChange(e) {
+        console.log('发生change事件，携带值为', e.detail.value)
+        this.setData({
+            'allRoleObj.starVal': e.detail.value
+        })
+    },
+    // 卡牌库-角色馆藏等级-change
+    allGuancChange(e) {
+        console.log('发生change事件，携带值为', e.detail.value)
+        this.setData({
+            'allRoleObj.collectVal': e.detail.value
+        })
+    },
+    // 卡牌库-角色影技等级-change
+    allShadowChange(e) {
+        console.log('发生change事件，携带值为', e.detail.value)
+        this.setData({
+            'allRoleObj.shadowLevelVal': this.data.allShadowLevelArr[e.detail.value]
+        })
+    },
+    // 卡牌库-角色被动技1等级-change
+    allSkill1Change(e) {
+        console.log('发生change事件，携带值为', e.detail.value)
+        this.setData({
+            'allRoleObj.passiveSkillLevelVal1': this.data.allShadowLevelArr[e.detail.value]
+        })
+    },
+    allSkill2Change(e) {
+        console.log('发生change事件，携带值为', e.detail.value)
+        this.setData({
+            'allRoleObj.passiveSkillLevelVal2': this.data.allShadowLevelArr[e.detail.value]
+        })
+    },
+    allSkill3Change(e) {
+        console.log('发生change事件，携带值为', e.detail.value)
+        this.setData({
+            'allRoleObj.passiveSkillLevelVal3': this.data.allShadowLevelArr[e.detail.value]
+        })
+    },
+    // 卡牌库-核心印象-change
+    allCoreImpressionTypeChange(e) {
+        console.log('发生change事件，携带值为', e.detail.value)
+        this.setData({
+            'allRoleObj.coreImpressionTypeVal': this.data.coreImpressionTypeObj[e.detail.value].id,
+            'allRoleObj.coreImpressionTypeValName': this.data.coreImpressionTypeObj[e.detail.value].name,
+        })
+    },
+    allCoreImpressionChange(e) {
+        console.log('发生change事件，携带值为', e.detail.value)
+        this.setData({
+            'allRoleObj.coreImpressionVal': this.data.coreImpressionObj[e.detail.value].id,
+            'allRoleObj.coreImpressionValName': this.data.coreImpressionObj[e.detail.value].name,
+        })
+        if (this.data.allRoleObj.coreImpressionVal == 5){
+            this.setData({
+                'allRoleObj.coreImpressionTypeVal': 1,
+                'allRoleObj.coreImpressionTypeValName': '提供心之技能分数',
+            })
+        }
+    },
+    allCoreImpressionLevelChange(e) {
+        console.log('发生change事件，携带值为', e.detail.value)
+        this.setData({
+            'allRoleObj.coreImpressionLevelVal': this.data.coreImpressionLevelObj[e.detail.value].id,
+            'allRoleObj.coreImpressionLevelValName': this.data.coreImpressionLevelObj[e.detail.value].name,
         })
     },
     // 卡牌库-如果localStorage里已存在，获取选中角色的属性对象allRoleObj，否则取初始值;角色-change事件
@@ -985,11 +1064,8 @@ Page({
             console.log(e)
             console.log('picker发生change事件，携带value值为：', e.detail.value)
             _this.setData({
-                allPropRoleIndex: e.detail.value,
-            })
-            _this.setData({
-                'allRoleObj.propRoleKey': _this.data.allPropRoleArr[_this.data.allPropRoleIndex].dataIndex,
-                'allRoleObj.propRoleVal': _this.data.allPropRoleArr[_this.data.allPropRoleIndex].dataName
+                'allRoleObj.propRoleKey': _this.data.allPropRoleArr[e.detail.value].dataIndex,
+                'allRoleObj.propRoleVal': _this.data.allPropRoleArr[e.detail.value].dataName
             })
         }
         let allRoleKeyStorage = util.getLocalStorage(_this.data.allRoleKey+_this.data.allRoleObj.propRoleKey);
@@ -1043,6 +1119,10 @@ Page({
         }
         return roleObj.collectVal;
     },
+    // 卡牌库-角色属性保存localstorage
+    saveCards(){
+        util.setLocalStorage(this.data.allRoleKey+this.data.allRoleObj.propRoleKey, this.data.allRoleObj);
+    },
     // 保存馆藏localstorage
     saveCollection() {
         util.setLocalStorage(this.data.collectionKey, this.data.collection);
@@ -1091,4 +1171,14 @@ Page({
             starArr: tmpArr
         })
     },
+    getAllLevelArr() {
+        let _this = this;
+        let tmpArr = []
+        for (let i =80;i>=1; i--) {
+            tmpArr.push(i+'')
+        }
+        _this.setData({
+            allLevelArr: tmpArr
+        })
+    }
 })

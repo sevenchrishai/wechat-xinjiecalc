@@ -24,6 +24,11 @@ const setLocalStorage = (key, value) => {
     } else {
         wx.setStorageSync(key, value)
     }
+    wx.showToast({
+        title: '保存成功',
+        icon: 'success',
+        duration: 1000
+    })
 }
 
 module.exports = {
