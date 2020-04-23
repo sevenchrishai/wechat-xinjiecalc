@@ -13,12 +13,11 @@
 button{
     background-color: #3298dc !important;
 }
-picker{
+picker, input{
     display: inline-block;
     padding: 5rpx 10rpx;
     border-radius: 4rpx;
     border: 1px solid lightgray;
-    box-shadow: lightgray;
 }
 radio-group{
     text-align: center;
@@ -37,6 +36,7 @@ radio-group{
     margin-right: 10rpx;
 }
 .page{
+    margin: 0 10rpx;
 }
 .fgx{
     height: 1px !important;
@@ -47,12 +47,16 @@ radio-group{
     display: flex;
     justify-content: space-evenly;
 }
-.collection{
-    display: flex;
-    justify-content: center;
-}
 .collection .coll-item{
-    margin: 0 20rpx;
+    display: flex;
+    justify-content: space-between;
+    margin: 10rpx 150rpx;
+}
+.collection .coll-item .gcName{
+    text-align: right;
+}
+.collection .coll-item .gcLevel{
+    text-align: left;
 }
 .saveBtn{
     margin: 10rpx 0;
@@ -68,4 +72,25 @@ radio-group{
 }
 .bodysC .guanName{
     color: lightskyblue;
+}
+.sx{
+    line-height: 66rpx;
+}
+.yxfen{
+    display: flex;
+    color: #606;
+    padding: 10rpx 0;
+}
+.yx{
+    line-height: 56rpx;
+}
+.result{
+    text-align: center;
+}
+.result .tit{
+    font-size: 120%;
+    font-weight: bold;
+}
+.last{
+    margin-bottom: 50rpx;
 }

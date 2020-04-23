@@ -12,17 +12,16 @@
             </button>
         </view>
         <block wx:if="{{collectionFlag}}">
+            <!--馆藏-->
             <view class="collection">
-                <view class="guancang coll-item">
+                <view class="coll-item">
                     <view>馆藏</view>
-                    <block wx:for="{{collection}}" wx:key="index">
-                        <view>{{item.name}}</view>
-                    </block>
+                    <view>等级</view>
                 </view>
-                <view class="dengji coll-item">
-                    <view class="section__title">等级</view>
-                    <block wx:for="{{collection}}" wx:key="index">
-                        <view>
+                <block wx:for="{{collection}}" wx:key="index">
+                    <view class="coll-item">
+                        <view class="gcName">{{item.name}}</view>
+                        <view class="gcLevel">
                             <picker bindchange="guanCangBindPickerChange" value="{{item.level}}" data-index="{{index}}"
                                     range="{{guanCangLevelArray}}">
                                 <view class="picker">
@@ -30,14 +29,15 @@
                                 </view>
                             </picker>
                         </view>
-                    </block>
-                </view>
+                    </view>
+                </block>
             </view>
             <view class="saveBtn">
                 <button type="primary" bindtap="saveCollection">保存</button>
             </view>
         </block>
         <block wx:if="{{cards}}">
+            <!--卡牌库-->
             <view class="kapaiku m10">
                 <radio-group bindchange="allPropChange">
                     <radio class="radio" wx:for-items="{{propObj}}" wx:key="index" value="{{item.id}}" checked="{{item.checked}}">
@@ -65,7 +65,7 @@
                     <view>
                         <text class="mr-10">等级</text>
                         <picker bindchange="allSkillChange" data-type="roleLevelVal"
-                                value="{{allRoleObj.roleLevelVal}}" range="{{allLevelArr}}">
+                                value="{{allRoleObj.roleLevelVal}}" range="{{roleLevelArr}}">
                             <view class="picker">
                                 {{allRoleObj.roleLevelVal}}
                             </view>
@@ -96,7 +96,7 @@
                     <view>
                         <text class="mr-10">等级</text>
                         <picker bindchange="allSkillChange" data-type="shadowLevelVal"
-                                value="{{allRoleObj.shadowLevelVal}}" range="{{allShadowLevelArr}}">
+                                value="{{allRoleObj.shadowLevelVal}}" range="{{roleShadowLevelArr}}">
                             <view class="picker">
                                 {{allRoleObj.shadowLevelVal}}
                             </view>
@@ -108,7 +108,7 @@
                     <view>
                         <text class="mr-10">{{passiveSkillArr[allRoleObj.passiveSkillVal1]}}</text>
                         <picker bindchange="allSkillChange" data-type="passiveSkillLevelVal1"
-                                value="{{allRoleObj.passiveSkillLevelVal1}}" range="{{allShadowLevelArr}}">
+                                value="{{allRoleObj.passiveSkillLevelVal1}}" range="{{roleShadowLevelArr}}">
                             <view class="picker">
                                 {{allRoleObj.passiveSkillLevelVal1}}
                             </view>
@@ -117,7 +117,7 @@
                     <view>
                         <text class="mr-10">{{passiveSkillArr[allRoleObj.passiveSkillVal2]}}</text>
                         <picker bindchange="allSkillChange" data-type="passiveSkillLevelVal2"
-                                value="{{allRoleObj.passiveSkillLevelVal2}}" range="{{allShadowLevelArr}}">
+                                value="{{allRoleObj.passiveSkillLevelVal2}}" range="{{roleShadowLevelArr}}">
                             <view class="picker">
                                 {{allRoleObj.passiveSkillLevelVal2}}
                             </view>
@@ -126,7 +126,7 @@
                     <view>
                         <text class="mr-10">{{passiveSkillArr[allRoleObj.passiveSkillVal3]}}</text>
                         <picker bindchange="allSkillChange" data-type="passiveSkillLevelVal3"
-                                value="{{allRoleObj.passiveSkillLevelVal3}}" range="{{allShadowLevelArr}}">
+                                value="{{allRoleObj.passiveSkillLevelVal3}}" range="{{roleShadowLevelArr}}">
                             <view class="picker">
                                 {{allRoleObj.passiveSkillLevelVal3}}
                             </view>
@@ -167,5 +167,355 @@
         </block>
     </view>
     <view class="fgx"></view>
+    <view class="czMode">
+        <radio-group bindchange="czModeChange">
+            <radio class="radio" wx:for-items="{{czModeArr}}" wx:key="index" value="{{item.id}}" checked="{{item.checked}}">
+                <text>{{item.name}}</text>
+            </radio>
+        </radio-group>
+    </view>
+    <view class="fgx"></view>
+    <!--卡牌1-->
+    <view class="page">
+        <view class="kapai1 m10">
+            <view class="guancangbtns">
+                <view class="sx">卡牌1：</view>
+                <radio-group bindchange="mainPropChange">
+                    <radio class="radio" wx:for-items="{{propObj}}" wx:key="index" value="{{item.id}}" checked="{{item.checked}}">
+                        <text>{{item.name}}</text>
+                    </radio>
+                </radio-group>
+            </view>
+            <view class="yxfen">
+                <view class="yx">印象分：</view>
+                <input type="number" bindinput="bindInput" value="0" data-type="mainPropScore"/>
+            </view>
+            <view class="bodysC">
+                <view>
+                    <text class="mr-10">角色</text>
+                    <picker bindchange="getMainRole" value="{{mainRoleObj.propRoleVal}}"
+                            range="{{mainPropRoleArr}}" range-key="{{'dataName'}}">
+                        <view class="picker">
+                            {{mainRoleObj.propRoleVal}}
+                        </view>
+                    </picker>
+                </view>
+                <view>
+                    <switch type="checkbox" checked="{{mainRoleObj.isFusu}}" bindchange="mainSkillChange" data-type="isFusu"/>复苏
+                </view>
+                <view>
+                    <text class="guanName">({{makeupData[mainRoleObj.propRoleKey][13]}})</text>
+                </view>
+            </view>
+            <view class="bodysC">
+                <view>
+                    <text class="mr-10">等级</text>
+                    <picker bindchange="mainSkillChange" data-type="roleLevelVal"
+                            value="{{mainRoleObj.roleLevelVal}}" range="{{roleLevelArr}}">
+                        <view class="picker">
+                            {{mainRoleObj.roleLevelVal}}
+                        </view>
+                    </picker>
+                </view>
+                <view>
+                    <text class="mr-10">星级</text>
+                    <picker bindchange="mainSkillChange" data-type="starVal"
+                            value="{{mainRoleObj.starVal}}" range="{{starArr}}">
+                        <view class="picker">
+                            {{starArr[mainRoleObj.starVal]}}
+                        </view>
+                    </picker>
+                </view>
+                <view>
+                    <text class="mr-10">馆藏</text>
+                    <picker bindchange="mainSkillChange" data-type="collectVal"
+                            value="{{mainRoleObj.collectVal}}" range="{{guanCangLevelArray}}">
+                        <view class="picker">
+                            {{mainRoleObj.collectVal}}
+                        </view>
+                    </picker>
+                </view>
+            </view>
+            <view class="bodysC">
+                <view>影之召唤</view>
+                <view>{{shadowArr[mainRoleObj.shadowVal]}}</view>
+                <view>
+                    <text class="mr-10">等级</text>
+                    <picker bindchange="mainSkillChange" data-type="shadowLevelVal"
+                            value="{{mainRoleObj.shadowLevelVal}}" range="{{roleShadowLevelArr}}">
+                        <view class="picker">
+                            {{mainRoleObj.shadowLevelVal}}
+                        </view>
+                    </picker>
+                </view>
+            </view>
+            <view class="bodysC">
+                <view>被动</view>
+                <view>
+                    <text class="mr-10">{{passiveSkillArr[mainRoleObj.passiveSkillVal1]}}</text>
+                    <picker bindchange="mainSkillChange" data-type="passiveSkillLevelVal1"
+                            value="{{mainRoleObj.passiveSkillLevelVal1}}" range="{{roleShadowLevelArr}}">
+                        <view class="picker">
+                            {{mainRoleObj.passiveSkillLevelVal1}}
+                        </view>
+                    </picker>
+                </view>
+                <view>
+                    <text class="mr-10">{{passiveSkillArr[mainRoleObj.passiveSkillVal2]}}</text>
+                    <picker bindchange="mainSkillChange" data-type="passiveSkillLevelVal2"
+                            value="{{mainRoleObj.passiveSkillLevelVal2}}" range="{{roleShadowLevelArr}}">
+                        <view class="picker">
+                            {{mainRoleObj.passiveSkillLevelVal2}}
+                        </view>
+                    </picker>
+                </view>
+                <view>
+                    <text class="mr-10">{{passiveSkillArr[mainRoleObj.passiveSkillVal3]}}</text>
+                    <picker bindchange="mainSkillChange" data-type="passiveSkillLevelVal3"
+                            value="{{mainRoleObj.passiveSkillLevelVal3}}" range="{{roleShadowLevelArr}}">
+                        <view class="picker">
+                            {{mainRoleObj.passiveSkillLevelVal3}}
+                        </view>
+                    </picker>
+                </view>
+            </view>
+            <view class="bodysC">
+                <view>核心印象</view>
+                <view>
+                    <picker class="mr-10" bindchange="mainSkillChange" data-type="coreImpressionTypeVal"
+                            value="{{mainRoleObj.coreImpressionTypeVal}}"
+                            range="{{coreImpressionTypeObj}}" range-key="{{'name'}}">
+                        <view class="picker">
+                            {{mainRoleObj.coreImpressionTypeValName}}
+                        </view>
+                    </picker>
+                    <picker class="mr-10" bindchange="mainSkillChange" data-type="coreImpressionVal"
+                            value="{{mainRoleObj.coreImpressionVal}}"
+                            range="{{coreImpressionObj}}" range-key="{{'name'}}">
+                        <view class="picker">
+                            {{mainRoleObj.coreImpressionValName}}
+                        </view>
+                    </picker>
+                    <picker class="mr-10" bindchange="mainSkillChange" data-type="coreImpressionLevelVal"
+                            value="{{mainRoleObj.coreImpressionLevelVal}}"
+                            range="{{coreImpressionLevelObj}}" range-key="{{'name'}}">
+                        <view class="picker">
+                            {{mainRoleObj.coreImpressionLevelValName}}
+                        </view>
+                    </picker>
+                </view>
+            </view>
+
+        </view>
+    </view>
+    <view class="fgx"></view>
+    <!--卡牌2-->
+    <view class="page">
+        <view class="kapai2 m10">
+            <view class="guancangbtns">
+                <view class="sx">卡牌2：</view>
+                <radio-group bindchange="secondPropChange">
+                    <radio class="radio" wx:for-items="{{propObj}}" wx:key="index" value="{{item.id}}" checked="{{item.checked}}">
+                        <text>{{item.name}}</text>
+                    </radio>
+                </radio-group>
+            </view>
+            <view class="yxfen">
+                <view class="yx">印象分：</view>
+                <input type="number" bindinput="bindInput" value="0" data-type="secondPropScore"/>
+            </view>
+            <view class="bodysC">
+                <view>
+                    <text class="mr-10">角色</text>
+                    <picker bindchange="getSecondRole" value="{{secondRoleObj.propRoleVal}}"
+                            range="{{secondPropRoleArr}}" range-key="{{'dataName'}}">
+                        <view class="picker">
+                            {{secondRoleObj.propRoleVal}}
+                        </view>
+                    </picker>
+                </view>
+                <view>
+                    <switch type="checkbox" checked="{{secondRoleObj.isFusu}}" bindchange="secondSkillChange" data-type="isFusu"/>复苏
+                </view>
+                <view>
+                    <text class="guanName">({{makeupData[secondRoleObj.propRoleKey][13]}})</text>
+                </view>
+            </view>
+            <view class="bodysC">
+                <view>
+                    <text class="mr-10">等级</text>
+                    <picker bindchange="secondSkillChange" data-type="roleLevelVal"
+                            value="{{secondRoleObj.roleLevelVal}}" range="{{roleLevelArr}}">
+                        <view class="picker">
+                            {{secondRoleObj.roleLevelVal}}
+                        </view>
+                    </picker>
+                </view>
+                <view>
+                    <text class="mr-10">星级</text>
+                    <picker bindchange="secondSkillChange" data-type="starVal"
+                            value="{{secondRoleObj.starVal}}" range="{{starArr}}">
+                        <view class="picker">
+                            {{starArr[secondRoleObj.starVal]}}
+                        </view>
+                    </picker>
+                </view>
+                <view>
+                    <text class="mr-10">馆藏</text>
+                    <picker bindchange="secondSkillChange" data-type="collectVal"
+                            value="{{secondRoleObj.collectVal}}" range="{{guanCangLevelArray}}">
+                        <view class="picker">
+                            {{secondRoleObj.collectVal}}
+                        </view>
+                    </picker>
+                </view>
+            </view>
+            <view class="bodysC">
+                <view>影之召唤</view>
+                <view>{{shadowArr[secondRoleObj.shadowVal]}}</view>
+                <view>
+                    <text class="mr-10">等级</text>
+                    <picker bindchange="secondSkillChange" data-type="shadowLevelVal"
+                            value="{{secondRoleObj.shadowLevelVal}}" range="{{roleShadowLevelArr}}">
+                        <view class="picker">
+                            {{secondRoleObj.shadowLevelVal}}
+                        </view>
+                    </picker>
+                </view>
+            </view>
+            <view class="bodysC">
+                <view>被动</view>
+                <view>
+                    <text class="mr-10">{{passiveSkillArr[secondRoleObj.passiveSkillVal1]}}</text>
+                    <picker bindchange="secondSkillChange" data-type="passiveSkillLevelVal1"
+                            value="{{secondRoleObj.passiveSkillLevelVal1}}" range="{{roleShadowLevelArr}}">
+                        <view class="picker">
+                            {{secondRoleObj.passiveSkillLevelVal1}}
+                        </view>
+                    </picker>
+                </view>
+                <view>
+                    <text class="mr-10">{{passiveSkillArr[secondRoleObj.passiveSkillVal2]}}</text>
+                    <picker bindchange="secondSkillChange" data-type="passiveSkillLevelVal2"
+                            value="{{secondRoleObj.passiveSkillLevelVal2}}" range="{{roleShadowLevelArr}}">
+                        <view class="picker">
+                            {{secondRoleObj.passiveSkillLevelVal2}}
+                        </view>
+                    </picker>
+                </view>
+                <view>
+                    <text class="mr-10">{{passiveSkillArr[secondRoleObj.passiveSkillVal3]}}</text>
+                    <picker bindchange="secondSkillChange" data-type="passiveSkillLevelVal3"
+                            value="{{secondRoleObj.passiveSkillLevelVal3}}" range="{{roleShadowLevelArr}}">
+                        <view class="picker">
+                            {{secondRoleObj.passiveSkillLevelVal3}}
+                        </view>
+                    </picker>
+                </view>
+            </view>
+            <view class="bodysC">
+                <view>核心印象</view>
+                <view>
+                    <picker class="mr-10" bindchange="secondSkillChange" data-type="coreImpressionTypeVal"
+                            value="{{secondRoleObj.coreImpressionTypeVal}}"
+                            range="{{coreImpressionTypeObj}}" range-key="{{'name'}}">
+                        <view class="picker">
+                            {{secondRoleObj.coreImpressionTypeValName}}
+                        </view>
+                    </picker>
+                    <picker class="mr-10" bindchange="secondSkillChange" data-type="coreImpressionVal"
+                            value="{{secondRoleObj.coreImpressionVal}}"
+                            range="{{coreImpressionObj}}" range-key="{{'name'}}">
+                        <view class="picker">
+                            {{secondRoleObj.coreImpressionValName}}
+                        </view>
+                    </picker>
+                    <picker class="mr-10" bindchange="secondSkillChange" data-type="coreImpressionLevelVal"
+                            value="{{secondRoleObj.coreImpressionLevelVal}}"
+                            range="{{coreImpressionLevelObj}}" range-key="{{'name'}}">
+                        <view class="picker">
+                            {{secondRoleObj.coreImpressionLevelValName}}
+                        </view>
+                    </picker>
+                </view>
+            </view>
+
+        </view>
+    </view>
+    <view class="fgx"></view>
+    <view class="saveBtn">
+        <button type="primary" bindtap="compareScore">对比</button>
+    </view>
+    <view class="page result">
+        <view>
+            <view class="tit">【{{mainRoleObj.propRoleVal}}】</view>
+            <view>
+                {{mainRoleObj.roleLevelVal}}级，{{starArr[mainRoleObj.starVal]}}，主动等级{{mainRoleObj.shadowLevelVal}}，被动等级
+                {{mainRoleObj.passiveSkillLevelVal1}}-{{mainRoleObj.passiveSkillLevelVal2}}-{{mainRoleObj.passiveSkillLevelVal3}}，
+                {{mainRoleObj.isFusu?"已":"未"}}复苏，馆藏{{mainRoleObj.collectVal}}级，
+                {{mainRoleObj.coreImpressionLevelValName}}，
+                {{mainRoleObj.coreImpressionValName}}，
+                {{mainRoleObj.coreImpressionTypeVal==1?"心技印象":"影技印象"}}
+            </view>
+            <view>
+                搭配之力为{{mainPower}}，印象分为{{mainPropScore}}，得分系数为{{mainScore}}
+            </view>
+        </view>
+        <view class="fgx"></view>
+        <view>
+            <view class="tit">【{{secondRoleObj.propRoleVal}}】</view>
+            <view>
+                {{secondRoleObj.roleLevelVal}}级，{{starArr[secondRoleObj.starVal]}}，主动等级{{secondRoleObj.shadowLevelVal}}，被动等级
+                {{secondRoleObj.passiveSkillLevelVal1}}-{{secondRoleObj.passiveSkillLevelVal2}}-{{secondRoleObj.passiveSkillLevelVal3}}，
+                {{secondRoleObj.isFusu?"已":"未"}}复苏，馆藏{{secondRoleObj.collectVal}}级，
+                {{secondRoleObj.coreImpressionLevelValName}}，
+                {{secondRoleObj.coreImpressionValName}}，
+                {{secondRoleObj.coreImpressionTypeVal==1?"心技印象":"影技印象"}}
+            </view>
+            <view>
+                搭配之力为{{secondPower}}，印象分为{{secondPropScore}}，得分系数为{{secondScore}}
+            </view>
+        </view>
+        <view class="fgx"></view>
+        <view class="last">
+            <view wx:if="{{(mainPower+mainPropScore) > (secondPower+secondPropScore) && mainScore > secondScore}}">
+                结论：{{mainRoleObj.propRoleVal}}的搭配之力和得分系数均超过{{secondRoleObj.propRoleVal}}，
+                所以选择使用{{mainRoleObj.propRoleVal}}
+            </view>
+            <view wx:if="{{(mainPower+mainPropScore) < (secondPower+secondPropScore) && mainScore < secondScore}}">
+                结论：{{mainRoleObj.propRoleVal}}的搭配之力和得分系数均小于{{secondRoleObj.propRoleVal}}，
+                所以选择使用{{secondRoleObj.propRoleVal}}
+            </view>
+            <view wx:if="{{(mainPower+mainPropScore) > (secondPower+secondPropScore) && mainScore < secondScore}}">
+                结论：{{compareResult>0?
+                '当你的搭配+羁绊+美甲+妆容>' + compareResult + '时,选择使用'+ secondRoleObj.propRoleVal + '得分会更高；否则使用'+
+                mainRoleObj.propRoleVal+ '的得分会更高。'
+                :'无论什么情况，都是'+secondRoleObj.propRoleVal+'的得分会更高。'}}
+            </view>
+            <view wx:if="{{(mainPower+mainPropScore) < (secondPower+secondPropScore) && mainScore > secondScore}}">
+                结论：{{compareResult>0?
+                '当你的搭配+羁绊+美甲+妆容>' + compareResult + '时,选择使用'+ mainRoleObj.propRoleVal + '得分会更高；否则使用'+
+                secondRoleObj.propRoleVal+ '的得分会更高。'
+                :'无论什么情况，都是'+mainRoleObj.propRoleVal+'的得分会更高。'}}
+            </view>
+            <view wx:if="{{(mainPower+mainPropScore) > (secondPower+secondPropScore) && mainScore == secondScore}}">
+                结论：{{mainRoleObj.propRoleVal}}和{{secondRoleObj.propRoleVal}}的得分系数相同，但选择使用
+                {{mainRoleObj.propRoleVal}}，因为它的搭配之力分数更高。
+            </view>
+            <view wx:if="{{(mainPower+mainPropScore) < (secondPower+secondPropScore) && mainScore == secondScore}}">
+                结论：{{mainRoleObj.propRoleVal}}和{{secondRoleObj.propRoleVal}}的得分系数相同，但选择使用
+                {{secondRoleObj.propRoleVal}}，因为它的搭配之力分数更高。
+            </view>
+            <view wx:if="{{(mainPower+mainPropScore) == (secondPower+secondPropScore) && mainScore > secondScore}}">
+                结论：{{mainRoleObj.propRoleVal}}的得分系数更高，所以选择使用{{mainRoleObj.propRoleVal}}
+            </view>
+            <view wx:if="{{(mainPower+mainPropScore) == (secondPower+secondPropScore) && mainScore < secondScore}}">
+                结论：{{secondRoleObj.propRoleVal}}的得分系数更高，所以选择使用{{secondRoleObj.propRoleVal}}
+            </view>
+            <view wx:if="{{(mainPower+mainPropScore) == (secondPower+secondPropScore) && mainScore == secondScore}}">
+                结论：{{mainRoleObj.propRoleVal}}和{{secondRoleObj.propRoleVal}}是完全相同的两张卡。
+            </view>
+        </view>
+    </view>
 
 </view>

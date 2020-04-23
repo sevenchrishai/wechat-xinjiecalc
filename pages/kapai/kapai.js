@@ -14,8 +14,8 @@ Page({
             {id: '4',name: '性感',checked: false},
             {id: '5',name: '帅气',checked: false}
         ],
-        allLevelArr: [],
-        allShadowLevelArr: ['1','2','3','4','5'],
+        roleLevelArr: [],
+        roleShadowLevelArr: ['1','2','3','4','5'],
         allPropKey: '1',// 卡牌库绑定的属性radio
         mainPropKey: '1',// 卡牌1绑定的属性radio
         secondPropKey: '1',// 卡牌2绑定的属性radio
@@ -62,8 +62,11 @@ Page({
             passiveSkillVal3: 0,
             passiveSkillLevelVal3:1,
             coreImpressionVal: 2,
+            coreImpressionValName: '稀有',
             coreImpressionLevelVal: 5,
+            coreImpressionLevelValName: '深化5花',
             coreImpressionTypeVal: 1,
+            coreImpressionTypeValName: '提供心之技能分数',
         },//卡牌1中选中的角色的属性对象
         secondRoleObj:{
             propRoleKey: '',//角色
@@ -81,8 +84,11 @@ Page({
             passiveSkillVal3: 0,
             passiveSkillLevelVal3:1,
             coreImpressionVal: 2,
+            coreImpressionValName: '稀有',
             coreImpressionLevelVal: 5,
+            coreImpressionLevelValName: '深化5花',
             coreImpressionTypeVal: 1,
+            coreImpressionTypeValName: '提供心之技能分数',
         },//卡牌2中选中的角色的属性对象
         starArr: [],
         shadowArr: ['闪耀瞬间得分提升','某个环节使用额外得分','10秒内心之技能得分提升','20秒内心之技能得分提升','额外闪耀瞬间','功能卡'],
@@ -105,6 +111,10 @@ Page({
             {id: 1, name: '提供心之技能分数'},
             {id: 2, name: '提供影之召唤分数'}
         ],
+        czModeArr: [
+            {id: 1, name: '手动模式', checked: true},
+            {id: 2, name: '竞技场模式', checked: false}
+        ],
         czMode: 1,
         mainPower: 0,
         mainScore: 0,
@@ -116,7 +126,7 @@ Page({
         cards: true,
         compareResult: 0,
         collectionKey: "collection",
-        allRoleKey:"allRoleKey",
+        rockey:"rockey",
         makeupData: {
             //人物名字："爱衣"
             //卡牌名字："最初的告白"
@@ -887,9 +897,13 @@ Page({
         // 获取星级
         _this.getStarArr()
         // 获取等级
-        _this.getAllLevelArr()
+        _this.getRoleLevelArr()
         // 获取卡牌库初始角色属性（默认是典雅）
         _this.allPropChange();
+        // 获取卡牌1初始角色属性（默认是典雅）
+        _this.mainPropChange();
+        // 获取卡牌2初始角色属性（默认是典雅）
+        _this.secondPropChange();
     },
     // 事件event
     toggleGuanc() {
@@ -959,7 +973,6 @@ Page({
                     item.dataIndex = i;
                     item.dataName = _this.data.makeupData[i][1]+"-"+_this.data.makeupData[i][0];
                     item.dataType = _this.data.makeupData[i][2]
-                    // _this.allPropRoleArr.push(item)
                     tmpArr.push(item)
                 }
             }
@@ -985,14 +998,14 @@ Page({
                 'allRoleObj.propRoleVal': _this.data.allPropRoleArr[e.detail.value].dataName
             })
         }
-        let allRoleKeyStorage = util.getLocalStorage(_this.data.allRoleKey+_this.data.allRoleObj.propRoleKey);
-        if(allRoleKeyStorage && JSON.parse(allRoleKeyStorage).propRoleKey == _this.data.allRoleObj.propRoleKey){
+        let rockeyStorage = util.getLocalStorage(_this.data.rockey+_this.data.allRoleObj.propRoleKey);
+        if(rockeyStorage && JSON.parse(rockeyStorage).propRoleKey == _this.data.allRoleObj.propRoleKey){
             _this.setData({
-                allRoleObj: JSON.parse(allRoleKeyStorage)
+                allRoleObj: JSON.parse(rockeyStorage)
             })
         } else {
-            let allroleobj = _this.getAllPassiveSkillVal(_this.data.allRoleObj, _this.data.allPropRoleArr)
-            let allroleobjgc = _this.getAllRoleCollection(_this.data.allRoleObj)
+            let allroleobj = _this.getPassiveSkillVal(_this.data.allRoleObj, _this.data.allPropRoleArr)
+            let allroleobjgc = _this.getRoleCollection(_this.data.allRoleObj)
             allroleobj.collectVal = allroleobjgc
             _this.setData({
                 allRoleObj: allroleobj
@@ -1014,7 +1027,7 @@ Page({
             // 卡牌库-角色等级-change
             case 'roleLevelVal':
                 this.setData({
-                    'allRoleObj.roleLevelVal': this.data.allLevelArr[e.detail.value]
+                    'allRoleObj.roleLevelVal': this.data.roleLevelArr[e.detail.value]
                 })
                 break
             // 卡牌库-角色星级-change
@@ -1032,23 +1045,23 @@ Page({
             // 卡牌库-角色影技等级-change
             case 'shadowLevelVal':
                 this.setData({
-                    'allRoleObj.shadowLevelVal': this.data.allShadowLevelArr[e.detail.value]
+                    'allRoleObj.shadowLevelVal': this.data.roleShadowLevelArr[e.detail.value]
                 })
                 break
             // 卡牌库-角色被动技1等级-change
             case 'passiveSkillLevelVal1':
                 this.setData({
-                    'allRoleObj.passiveSkillLevelVal1': this.data.allShadowLevelArr[e.detail.value]
+                    'allRoleObj.passiveSkillLevelVal1': this.data.roleShadowLevelArr[e.detail.value]
                 })
                 break
             case 'passiveSkillLevelVal2':
                 this.setData({
-                    'allRoleObj.passiveSkillLevelVal2': this.data.allShadowLevelArr[e.detail.value]
+                    'allRoleObj.passiveSkillLevelVal2': this.data.roleShadowLevelArr[e.detail.value]
                 })
                 break
             case 'passiveSkillLevelVal3':
                 this.setData({
-                    'allRoleObj.passiveSkillLevelVal3': this.data.allShadowLevelArr[e.detail.value]
+                    'allRoleObj.passiveSkillLevelVal3': this.data.roleShadowLevelArr[e.detail.value]
                 })
                 break
             // 卡牌库-核心印象-change
@@ -1078,8 +1091,316 @@ Page({
                 break
         }
     },
+    // 卡牌1-属性-change事件
+    mainPropChange(e){
+        let _this = this;
+        if (e && e.detail.value) {
+            console.log(e)
+            console.log('radio发生change事件，携带value值为：', e.detail.value)
+            _this.setData({
+                mainPropKey: e.detail.value
+            })
+        }
+        _this.getMainPropRoleObj()
+        _this.getMainRole()
+    },
+    // 卡牌1-获取选中属性的角色列表 mainPropRoleArr
+    getMainPropRoleObj(){
+        let _this = this;
+        let tmpArr = []
+        for (let i =1; i<=_this.data.makeupSum; i++) {
+            if (_this.data.makeupData[i][2]>=4) {//稀有度 非凡以上
+                if (_this.data.makeupData[i][3]==_this.data.mainPropKey) {//选中的主属性
+                    let item = {}
+                    item.dataIndex = i;
+                    item.dataName = _this.data.makeupData[i][1]+"-"+_this.data.makeupData[i][0];
+                    item.dataType = _this.data.makeupData[i][2]
+                    tmpArr.push(item)
+                }
+            }
+        }
+        tmpArr.sort(function(x,y){return y.dataType-x.dataType});
+        _this.setData({
+            mainPropRoleArr: tmpArr,
+        })
+        console.log('卡牌1-角色列表',_this.data.mainPropRoleArr)
+        _this.setData({
+            'mainRoleObj.propRoleKey': _this.data.mainPropRoleArr[0].dataIndex,
+            'mainRoleObj.propRoleVal': _this.data.mainPropRoleArr[0].dataName
+        })
+    },
+    // 卡牌1-如果localStorage里已存在，获取选中角色的属性对象mainRoleObj，否则取初始值;角色-change事件
+    getMainRole(e){
+        let _this = this;
+        if (e && e.detail.value) {
+            console.log(e)
+            console.log('picker发生change事件，携带value值为：', e.detail.value)
+            _this.setData({
+                'mainRoleObj.propRoleKey': _this.data.mainPropRoleArr[e.detail.value].dataIndex,
+                'mainRoleObj.propRoleVal': _this.data.mainPropRoleArr[e.detail.value].dataName
+            })
+        }
+        let rockeyStorage = util.getLocalStorage(_this.data.rockey+_this.data.mainRoleObj.propRoleKey);
+        if(rockeyStorage && JSON.parse(rockeyStorage).propRoleKey == _this.data.mainRoleObj.propRoleKey){
+            _this.setData({
+                mainRoleObj: JSON.parse(rockeyStorage)
+            })
+        } else {
+            let mainroleobj = _this.getPassiveSkillVal(_this.data.mainRoleObj, _this.data.mainPropRoleArr)
+            let mainroleobjgc = _this.getRoleCollection(_this.data.mainRoleObj)
+            mainroleobj.collectVal = mainroleobjgc
+            _this.setData({
+                mainRoleObj: mainroleobj
+            })
+        }
+        console.log('卡牌1-角色属性', _this.data.mainRoleObj)
+    },
+    // 卡牌1-change事件
+    mainSkillChange(e) {
+        console.log('卡牌库-发生change事件，携带值为', e.detail.value)
+        let type = e.currentTarget.dataset.type
+        switch (type) {
+            // 卡牌库-是否复苏-change
+            case 'isFusu':
+                this.setData({
+                    'mainRoleObj.isFusu': e.detail.value
+                })
+                break
+            // 卡牌库-角色等级-change
+            case 'roleLevelVal':
+                this.setData({
+                    'mainRoleObj.roleLevelVal': this.data.roleLevelArr[e.detail.value]
+                })
+                break
+            // 卡牌库-角色星级-change
+            case 'starVal':
+                this.setData({
+                    'mainRoleObj.starVal': e.detail.value
+                })
+                break
+            // 卡牌库-角色馆藏等级-change
+            case 'collectVal':
+                this.setData({
+                    'mainRoleObj.collectVal': e.detail.value
+                })
+                break
+            // 卡牌库-角色影技等级-change
+            case 'shadowLevelVal':
+                this.setData({
+                    'mainRoleObj.shadowLevelVal': this.data.roleShadowLevelArr[e.detail.value]
+                })
+                break
+            // 卡牌库-角色被动技1等级-change
+            case 'passiveSkillLevelVal1':
+                this.setData({
+                    'mainRoleObj.passiveSkillLevelVal1': this.data.roleShadowLevelArr[e.detail.value]
+                })
+                break
+            case 'passiveSkillLevelVal2':
+                this.setData({
+                    'mainRoleObj.passiveSkillLevelVal2': this.data.roleShadowLevelArr[e.detail.value]
+                })
+                break
+            case 'passiveSkillLevelVal3':
+                this.setData({
+                    'mainRoleObj.passiveSkillLevelVal3': this.data.roleShadowLevelArr[e.detail.value]
+                })
+                break
+            // 卡牌库-核心印象-change
+            case 'coreImpressionTypeVal':
+                this.setData({
+                    'mainRoleObj.coreImpressionTypeVal': this.data.coreImpressionTypeObj[e.detail.value].id,
+                    'mainRoleObj.coreImpressionTypeValName': this.data.coreImpressionTypeObj[e.detail.value].name,
+                })
+                break
+            case 'coreImpressionVal':
+                this.setData({
+                    'mainRoleObj.coreImpressionVal': this.data.coreImpressionObj[e.detail.value].id,
+                    'mainRoleObj.coreImpressionValName': this.data.coreImpressionObj[e.detail.value].name,
+                })
+                if (this.data.mainRoleObj.coreImpressionVal == 5){
+                    this.setData({
+                        'mainRoleObj.coreImpressionTypeVal': 1,
+                        'mainRoleObj.coreImpressionTypeValName': '提供心之技能分数',
+                    })
+                }
+                break
+            case 'coreImpressionLevelVal':
+                this.setData({
+                    'mainRoleObj.coreImpressionLevelVal': this.data.coreImpressionLevelObj[e.detail.value].id,
+                    'mainRoleObj.coreImpressionLevelValName': this.data.coreImpressionLevelObj[e.detail.value].name,
+                })
+                break
+        }
+    },
+    // 卡牌2-属性-change事件
+    secondPropChange(e){
+        let _this = this;
+        if (e && e.detail.value) {
+            console.log(e)
+            console.log('radio发生change事件，携带value值为：', e.detail.value)
+            _this.setData({
+                secondPropKey: e.detail.value
+            })
+        }
+        _this.getSecondPropRoleObj()
+        _this.getSecondRole()
+    },
+    // 卡牌2-获取选中属性的角色列表 secondPropRoleArr
+    getSecondPropRoleObj(){
+        let _this = this;
+        let tmpArr = []
+        for (let i =1; i<=_this.data.makeupSum; i++) {
+            if (_this.data.makeupData[i][2]>=4) {//稀有度 非凡以上
+                if (_this.data.makeupData[i][3]==_this.data.secondPropKey) {//选中的主属性
+                    let item = {}
+                    item.dataIndex = i;
+                    item.dataName = _this.data.makeupData[i][1]+"-"+_this.data.makeupData[i][0];
+                    item.dataType = _this.data.makeupData[i][2]
+                    tmpArr.push(item)
+                }
+            }
+        }
+        tmpArr.sort(function(x,y){return y.dataType-x.dataType});
+        _this.setData({
+            secondPropRoleArr: tmpArr,
+        })
+        console.log('卡牌1-角色列表',_this.data.secondPropRoleArr)
+        _this.setData({
+            'secondRoleObj.propRoleKey': _this.data.secondPropRoleArr[0].dataIndex,
+            'secondRoleObj.propRoleVal': _this.data.secondPropRoleArr[0].dataName
+        })
+    },
+    // 卡牌2-如果localStorage里已存在，获取选中角色的属性对象secondRoleObj，否则取初始值;角色-change事件
+    getSecondRole(e){
+        let _this = this;
+        if (e && e.detail.value) {
+            console.log(e)
+            console.log('picker发生change事件，携带value值为：', e.detail.value)
+            _this.setData({
+                'secondRoleObj.propRoleKey': _this.data.secondPropRoleArr[e.detail.value].dataIndex,
+                'secondRoleObj.propRoleVal': _this.data.secondPropRoleArr[e.detail.value].dataName
+            })
+        }
+        let rockeyStorage = util.getLocalStorage(_this.data.rockey+_this.data.secondRoleObj.propRoleKey);
+        if(rockeyStorage && JSON.parse(rockeyStorage).propRoleKey == _this.data.secondRoleObj.propRoleKey){
+            _this.setData({
+                secondRoleObj: JSON.parse(rockeyStorage)
+            })
+        } else {
+            let secondroleobj = _this.getPassiveSkillVal(_this.data.secondRoleObj, _this.data.secondPropRoleArr)
+            let secondroleobjgc = _this.getRoleCollection(_this.data.secondRoleObj)
+            secondroleobj.collectVal = secondroleobjgc
+            _this.setData({
+                secondRoleObj: secondroleobj
+            })
+        }
+        console.log('卡牌1-角色属性', _this.data.secondRoleObj)
+    },
+    // 卡牌2-change事件
+    secondSkillChange(e) {
+        console.log('卡牌库-发生change事件，携带值为', e.detail.value)
+        let type = e.currentTarget.dataset.type
+        switch (type) {
+            // 卡牌库-是否复苏-change
+            case 'isFusu':
+                this.setData({
+                    'secondRoleObj.isFusu': e.detail.value
+                })
+                break
+            // 卡牌库-角色等级-change
+            case 'roleLevelVal':
+                this.setData({
+                    'secondRoleObj.roleLevelVal': this.data.roleLevelArr[e.detail.value]
+                })
+                break
+            // 卡牌库-角色星级-change
+            case 'starVal':
+                this.setData({
+                    'secondRoleObj.starVal': e.detail.value
+                })
+                break
+            // 卡牌库-角色馆藏等级-change
+            case 'collectVal':
+                this.setData({
+                    'secondRoleObj.collectVal': e.detail.value
+                })
+                break
+            // 卡牌库-角色影技等级-change
+            case 'shadowLevelVal':
+                this.setData({
+                    'secondRoleObj.shadowLevelVal': this.data.roleShadowLevelArr[e.detail.value]
+                })
+                break
+            // 卡牌库-角色被动技1等级-change
+            case 'passiveSkillLevelVal1':
+                this.setData({
+                    'secondRoleObj.passiveSkillLevelVal1': this.data.roleShadowLevelArr[e.detail.value]
+                })
+                break
+            case 'passiveSkillLevelVal2':
+                this.setData({
+                    'secondRoleObj.passiveSkillLevelVal2': this.data.roleShadowLevelArr[e.detail.value]
+                })
+                break
+            case 'passiveSkillLevelVal3':
+                this.setData({
+                    'secondRoleObj.passiveSkillLevelVal3': this.data.roleShadowLevelArr[e.detail.value]
+                })
+                break
+            // 卡牌库-核心印象-change
+            case 'coreImpressionTypeVal':
+                this.setData({
+                    'secondRoleObj.coreImpressionTypeVal': this.data.coreImpressionTypeObj[e.detail.value].id,
+                    'secondRoleObj.coreImpressionTypeValName': this.data.coreImpressionTypeObj[e.detail.value].name,
+                })
+                break
+            case 'coreImpressionVal':
+                this.setData({
+                    'secondRoleObj.coreImpressionVal': this.data.coreImpressionObj[e.detail.value].id,
+                    'secondRoleObj.coreImpressionValName': this.data.coreImpressionObj[e.detail.value].name,
+                })
+                if (this.data.secondRoleObj.coreImpressionVal == 5){
+                    this.setData({
+                        'secondRoleObj.coreImpressionTypeVal': 1,
+                        'secondRoleObj.coreImpressionTypeValName': '提供心之技能分数',
+                    })
+                }
+                break
+            case 'coreImpressionLevelVal':
+                this.setData({
+                    'secondRoleObj.coreImpressionLevelVal': this.data.coreImpressionLevelObj[e.detail.value].id,
+                    'secondRoleObj.coreImpressionLevelValName': this.data.coreImpressionLevelObj[e.detail.value].name,
+                })
+                break
+        }
+    },
+    // 模式-change事件
+    czModeChange(e) {
+        console.log('mode-发生change事件，携带值为', e.detail.value)
+        this.setData({
+            czMode: e.detail.value
+        })
+    },
+    // input-change事件
+    bindInput(e) {
+        console.log('input-发生change事件，携带值为', e.detail.value)
+        let type = e.currentTarget.dataset.type
+        switch (type) {
+            case 'mainPropScore':
+                this.setData({
+                    mainPropScore: e.detail.value
+                })
+                break
+            case 'secondPropScore':
+                this.setData({
+                    secondPropScore: e.detail.value
+                })
+                break
+        }
+    },
     // 通用方法-获取选中角色影子技能和被动技能-初始值
-    getAllPassiveSkillVal(roleObj, propRoleArr){
+    getPassiveSkillVal(roleObj, propRoleArr){
         let _this = this;
         if (roleObj && propRoleArr) {
             roleObj.propRoleVal = '';
@@ -1102,7 +1423,7 @@ Page({
         return roleObj;
     },
     // 通用方法-获取选中角色对应的馆藏等级-初始值(馆藏列表也存了localStorage)
-    getAllRoleCollection(roleObj){
+    getRoleCollection(roleObj){
         let _this = this;
         let gcName = _this.data.makeupData[roleObj.propRoleKey][13];
         if (_this.data.collection){
@@ -1116,7 +1437,7 @@ Page({
     },
     // 卡牌库-角色属性保存localstorage
     saveCards(){
-        util.setLocalStorage(this.data.allRoleKey+this.data.allRoleObj.propRoleKey, this.data.allRoleObj);
+        util.setLocalStorage(this.data.rockey+this.data.allRoleObj.propRoleKey, this.data.allRoleObj);
     },
     // 保存馆藏localstorage
     saveCollection() {
@@ -1166,14 +1487,575 @@ Page({
             starArr: tmpArr
         })
     },
-    getAllLevelArr() {
+    getRoleLevelArr() {
         let _this = this;
         let tmpArr = []
         for (let i =80;i>=1; i--) {
             tmpArr.push(i+'')
         }
         _this.setData({
-            allLevelArr: tmpArr
+            roleLevelArr: tmpArr
         })
-    }
+    },
+    // 对比
+    compareScore() {
+        let _this = this;
+        _this.data.mainPower = 0;
+        _this.data.mainScore = 0;
+        _this.data.secondPower = 0;
+        _this.data.secondScore = 0;
+        _this.data.compareResult = 0;
+        let power1 = _this.getPower(
+            _this.data.mainRoleObj.propRoleKey,
+            _this.data.mainRoleObj.roleLevelVal,
+            _this.data.mainRoleObj.starVal,
+            _this.data.mainRoleObj.isFusu,
+            _this.data.mainRoleObj.collectVal,
+            _this.data.mainPropKey);
+        let score1 = _this.getScore(
+            _this.data.mainPropRoleArr,
+            _this.data.mainRoleObj.propRoleKey,
+            1+_this.data.mainRoleObj.shadowVal,
+            _this.data.mainRoleObj.shadowLevelVal,
+            _this.data.mainRoleObj.passiveSkillVal1,
+            _this.data.mainRoleObj.passiveSkillVal2,
+            _this.data.mainRoleObj.passiveSkillVal3,
+            _this.data.mainRoleObj.passiveSkillLevelVal1,
+            _this.data.mainRoleObj.passiveSkillLevelVal2,
+            _this.data.mainRoleObj.passiveSkillLevelVal3,
+            _this.data.mainRoleObj.coreImpressionVal,
+            _this.data.mainRoleObj.coreImpressionLevelVal,
+            _this.data.mainRoleObj.coreImpressionTypeVal);
+        let power2 = _this.getPower(
+            _this.data.secondRoleObj.propRoleKey,
+            _this.data.secondRoleObj.roleLevelVal,
+            _this.data.secondRoleObj.starVal,
+            _this.data.secondRoleObj.isFusu,
+            _this.data.secondRoleObj.collectVal,
+            _this.data.secondPropKey);
+        let score2 = _this.getScore(
+            _this.data.secondPropRoleArr,
+            _this.data.secondRoleObj.propRoleKey,
+            1+_this.data.secondRoleObj.shadowVal,
+            _this.data.secondRoleObj.shadowLevelVal,
+            _this.data.secondRoleObj.passiveSkillVal1,
+            _this.data.secondRoleObj.passiveSkillVal2,
+            _this.data.secondRoleObj.passiveSkillVal3,
+            _this.data.secondRoleObj.passiveSkillLevelVal1,
+            _this.data.secondRoleObj.passiveSkillLevelVal2,
+            _this.data.secondRoleObj.passiveSkillLevelVal3,
+            _this.data.secondRoleObj.coreImpressionVal,
+            _this.data.secondRoleObj.coreImpressionLevelVal,
+            _this.data.secondRoleObj.coreImpressionTypeVal);
+        _this.setData({
+            mainPower: power1,
+            secondPower: power2,
+            mainScore: score1,
+            secondScore: score2,
+        })
+        console.log(_this.data.mainPower,_this.data.secondPower,_this.data.mainScore,_this.data.secondScore)
+        // 当卡1的分数和 > 卡2的分数和，并且卡1的系数 < 卡2的得分系数
+        let ka2value = _this.data.secondScore*(parseInt(_this.data.secondPower)+parseInt(_this.data.secondPropScore));
+        let ka1value = _this.data.mainScore*(parseInt(_this.data.mainPower)+parseInt(_this.data.mainPropScore));
+        let chaVlue = ka2value - ka1value;
+        let chaXishuValue = _this.data.mainScore - _this.data.secondScore;
+        let chuValue = chaVlue/chaXishuValue;
+        _this.setData({
+            compareResult: Math.floor(chuValue)
+        },() => {
+            wx.showToast({
+                title: '计算完成',
+                icon: 'success',
+                duration: 1000
+            })
+        })
+        /**
+         * ((卡1分数+卡1印象分+x)*卡1系数) > ((卡2分数+卡2印象分+x)*卡2系数)
+         *
+         * ka1value + x*卡1系数 > ka2value + x*卡2系数
+         *
+         *  x(卡1系数 - 卡2系数) > chaVlue
+         *
+         *  x > chaVlue / chaXishuValue
+         */
+        console.log(_this.data.compareResult)
+    },
+    getPower(roleKey, roleLevel, star, isFusu, collect, mainPropKey){//角色，等级，星级，是否复苏，馆藏，主属性卡
+        let _this = this;
+        var temp;
+        temp = parseInt(_this.data.makeupData[roleKey][3 + parseInt(mainPropKey)]);
+        temp = temp + _this.Calc(parseInt(roleLevel), parseInt(star) + 1, parseInt(_this.data.makeupData[roleKey][2]), (parseInt(_this.data.makeupData[roleKey][3]) == parseInt(mainPropKey) ? 1 : 0))
+        temp = temp * (parseInt(collect) * 0.02 + (isFusu ? 1.15 : 1));
+        temp = Math.round(temp);
+        return temp;
+    },
+    Calc(tl, ts, star, iifm){
+        let _this = this;
+        if (iifm == 1) {
+            return parseInt(_this.subLevelVal("lvstatus", 2, star, 1, tl)) + parseInt(_this.subLevelVal("g", 3, star, 1, ts))
+        } else {
+            return parseInt(_this.subLevelVal("lvstatus", 3, star, 1, tl))
+        }
+    },
+    subLevelVal(tpln, index, star, lv1, lv2) {
+        let _this = this;
+        return _this.getLevelVal(tpln, index, star, lv2);
+    },
+    getLevelVal(tpln, index, star, lv) {
+        let _this = this;
+        return _this.data.makeupTemplate[tpln + star + "n"][lv - 1][index];
+    },
+    getScore(propRoleArr,Char,Skill,SkillLevel,S1,S2,S3,S1L,S2L,S3L,YXRank,YXLevel,YXType){
+        //角色，影子，影子等级，被动技能1,2,3，被动技能等级1,2,3，核心印象，印象深化，印象种类
+        console.log(Char,Skill,SkillLevel,S1,S2,S3,S1L,S2L,S3L,YXRank,YXLevel,YXType)//5 0 1 2 3 4 1 1 1 2 5 1
+        let _this = this;
+        var YXXINup,YXYINGup,Rank,Level,XINup,K = 0;
+        var Multiply = [];
+        var FU;
+        var XIN = [];
+        var YING = [];
+        var SHAN = [];
+        var SHANup = [];
+        var XINT = [];
+        var YZZH = [];
+        var s10 = [];
+        var s20 = [];
+        var Score = [];
+        var Power = [];
+        var SF = [];
+        var stat = [];
+        SF[1] = 0
+        SF[2] = 0
+        SF[3] = 0
+        Multiply[1] = 0
+        Multiply[2] = 0
+        Multiply[3] = 0
+        Multiply[4] = 0
+        Multiply[5] = 0
+        Multiply[6] = 0
+        Multiply[7] = 0
+        Multiply[8] = 0
+        var X, S, higher, lower, high, low, name1, name2, hh, M, Shuxing;
+        var probability = [0.1, 0.16, 0.2, 0.25, 0.18];
+        var BaoFa = probability[YXRank - 1];
+        var Mode = _this.data.czMode != 1;
+        if (YXType == 1) {//设置印象加分项
+            YXXINup = _this.YXPoint(YXRank, YXLevel) / 100;
+            YXYINGup = 0;
+        } else {
+            YXYINGup = _this.YXPoint(YXRank, YXLevel) / 100;
+            YXXINup = 0;
+        }
+        for (var i = 1; i <= 1; i++) {
+            SHANup[i] = 0
+            Multiply[1] = 0
+            Multiply[2] = 0
+            Multiply[3] = 0
+            Multiply[4] = 0
+            XINT[i] = 0
+            s10[i] = false
+            s20[i] = false
+            Rank = parseInt(_this.data.makeupData[Char][2]) - 2;
+            for (let num = 1; num <= 4; num++) {
+                if (S1 == num) {
+                    Multiply[num] = _this.getPassiveSkill(Rank, S1L, num)
+                }
+                if (S2 == num) {
+                    Multiply[num] = _this.getPassiveSkill(Rank, S2L, num)
+                }
+                if (S3 == num) {
+                    Multiply[num] = _this.getPassiveSkill(Rank, S3L, num)
+                }
+            }
+            //Multiply[4] = Multiply[4] * 5//设置被动加分项
+            Level = parseInt(SkillLevel)//设置主动加分项
+            switch (Rank.toString()) {
+                case "1"://稀有
+                    switch (Skill.toString()) {
+                        case "1"://闪耀时刻加成
+                            YZZH[i] = 10 + 2 * Level
+                            switch (Level) {
+                                case 1:
+                                    SHANup[i] = 37.5
+                                    break;
+                                case 2:
+                                    SHANup[i] = 43.8
+                                    break;
+                                case 3:
+                                    SHANup[i] = 50
+                                    break;
+                                case 4:
+                                    SHANup[i] = 56.3
+                                    break;
+                                case 5:
+                                    SHANup[i] = 62.5
+                                    break;
+                            }
+                            break;
+                        case "2"://环节加成
+                            switch (Level) {
+                                case 1:
+                                    YZZH[i] = 19.5
+                                    break;
+                                case 2:
+                                    YZZH[i] = 22.8
+                                    break;
+                                case 3:
+                                    YZZH[i] = 26
+                                    break;
+                                case 4:
+                                    YZZH[i] = 29.3
+                                    break;
+                                case 5:
+                                    YZZH[i] = 32.5
+                                    break;
+                            }
+                            break;
+                        case "4"://20s加成
+                            YZZH[i] = 12 + (Level - 1) * 2
+                            s20[i] = true
+                            switch (Level) {
+                                case 1:
+                                    XINT[i] = 11.5
+                                    break;
+                                case 2:
+                                    XINT[i] = 13.4
+                                    break;
+                                case 3:
+                                    XINT[i] = 15.4
+                                    break;
+                                case 4:
+                                    XINT[i] = 17.3
+                                    break;
+                                case 5:
+                                    XINT[i] = 19.2
+                                    break;
+                            }
+                            break;
+                        case "3"://10s加成
+                            YZZH[i] = 12 + (Level - 1) * 2
+                            s10[i] = true
+                            switch (Level) {
+                                case 1:
+                                    XINT[i] = 21.4
+                                    break;
+                                case 2:
+                                    XINT[i] = 25
+                                    break;
+                                case 3:
+                                    XINT[i] = 28.6
+                                    break;
+                                case 4:
+                                    XINT[i] = 32.1
+                                    break;
+                                case 5:
+                                    XINT[i] = 35.7
+                                    break;
+                            }
+                            break;
+                        case "5"://双闪
+                            YZZH[i] = (Level) * 2.5
+                            SHANup[i] = 100
+                            break;
+                        case "6"://功能
+                            switch (Level) {
+                                case 1:
+                                    YZZH[i] = 4.5
+                                    break;
+                                case 2:
+                                    YZZH[i] = 5.3
+                                    break;
+                                case 3:
+                                    YZZH[i] = 6
+                                    break;
+                                case 4:
+                                    YZZH[i] = 6.8
+                                    break;
+                                case 5:
+                                    YZZH[i] = 7.5
+                                    break;
+                            }
+                            break;
+                    }
+                    break;
+                case "3"://闪耀
+                    switch (Skill.toString()) {
+                        case "1"://闪耀时刻加成
+                            YZZH[i] = 12.5 + 2.5 * Level
+                            SHANup[i] = 62.5 + Level * 12.5
+                            break;
+                        case "2"://环节加成
+                            YZZH[i] = 25 + Level * 5
+                            break;
+                        case "4"://20s加成
+                            YZZH[i] = 18 + (Level - 1) * 3
+                            s20[i] = true
+                            switch (Level) {
+                                case 1:
+                                    XINT[i] = 18.5
+                                    break;
+                                case 2:
+                                    XINT[i] = 21.6
+                                    break;
+                                case 3:
+                                    XINT[i] = 24.6
+                                    break;
+                                case 4:
+                                    XINT[i] = 27.7
+                                    break;
+                                case 5:
+                                    XINT[i] = 30.8
+                                    break;
+                            }
+                            break;
+                        case "3"://10s加成
+                            YZZH[i] = 18 + (Level - 1) * 3
+                            s10[i] = true
+                            switch (Level) {
+                                case 1:
+                                    XINT[i] = 34.2
+                                    break;
+                                case 2:
+                                    XINT[i] = 40
+                                    break;
+                                case 3:
+                                    XINT[i] = 45.6
+                                    break;
+                                case 4:
+                                    XINT[i] = 51.3
+                                    break;
+                                case 5:
+                                    XINT[i] = 57.1
+                                    break;
+                            }
+                            break;
+                        case "5"://双闪
+                            alert("尚未有闪耀属性的双闪瞬设计师，数据仅供参考。")
+                            YZZH[i] = (Level) * 6
+                            SHANup[i] = 100
+                            break;
+                        case "6"://功能
+                            alert("尚未有闪耀属性功能卡设计师，数据仅供参考。")
+                            YZZH[i] = 100
+                            break;
+                    }
+                    break;
+                case "2"://非凡
+                    switch (Skill.toString()) {
+                        case "1"://闪耀时刻加成
+                            hh = propRoleArr[0].dataName;
+                            if ((hh == "晴夏海风-暖暖") || (hh == "灵魂魔术-夜骸")) {
+                                YZZH[i] = 10 + 2 * Level
+                                SHANup[i] = 50 + Level * 10
+                            } else {
+                                YZZH[i] = 12.5 + 2.5 * Level
+                                SHANup[i] = 37.5 + Level * 7.5
+                            }
+                            break;
+                        case "2"://环节加成
+                            YZZH[i] = 20 + Level * 4
+                            break;
+                        case "4"://20s加成
+                            YZZH[i] = 15 + (Level - 1) * 2.5
+                            s20[i] = true
+                            XINT[i] = 13.9 + (Level - 1) * 2.3
+                            break;
+                        case "3"://10s加成
+                            YZZH[i] = 15 + (Level - 1) * 2.5
+                            s10[i] = true
+                            XINT[i] = 25.7 + (Level - 1) * 4.3
+                            break;
+                        case "5"://双闪
+                            YZZH[i] = (Level) * 4
+                            SHANup[i] = 100
+                            break;
+                        case "6"://功能
+                            YZZH[i] = 9 + (Level - 1) * 1.5
+                            break;
+                    }
+            }
+            FU = "1"
+            SHAN[i] = 0.2 * (1 + SHANup[i] / 100)
+            YING[i] = (YZZH[i] / 100) * (1 + YXYINGup)
+            for (var num = 1; num <= 8; num++) {
+                var adda
+                if (s20[i] == true) {
+                    if (num == 1) {
+                        if (Mode) {
+                            adda = true
+                        } else {
+                            adda = true
+                        }
+                    }//4 头发
+                    if (num == 2) {
+                        if (Mode) {
+                            adda = false
+                        } else {
+                            adda = true
+                        }
+                    }//1 裙子
+                    if (num == 3) {
+                        if (Mode) {
+                            adda = false
+                        } else {
+                            adda = false
+                        }
+                    }//8 鞋袜
+                    if (num == 4) {
+                        if (Mode) {
+                            adda = false
+                        } else {
+                            adda = true
+                        }
+                    }//2 饰品1
+                    if (num == 5) {
+                        if (Mode) {
+                            adda = true
+                        } else {
+                            adda = true
+                        }
+                    }//3 饰品2
+                    if (num == 6) {
+                        if (Mode) {
+                            adda = true
+                        } else {
+                            adda = true
+                        }
+                    }//5 饰品3
+                    if (num == 7) {
+                        if (Mode) {
+                            adda = true
+                        } else {
+                            adda = true
+                        }
+                    }//6 饰品4
+                    if (num == 8) {
+                        if (Mode) {
+                            adda = true
+                        } else {
+                            adda = false
+                        }
+                    }//7 饰品5
+                }
+                if (s10[i] == true) {
+                    if (num == 1) {
+                        if (Mode) {
+                            adda = true
+                        } else {
+                            adda = true
+                        }
+                    }//4 头发
+                    if (num == 2) {
+                        if (Mode) {
+                            adda = false
+                        } else {
+                            adda = true
+                        }
+                    }//1 裙子
+                    if (num == 3) {
+                        if (Mode) {
+                            adda = false
+                        } else {
+                            adda = false
+                        }
+                    }//8 鞋袜
+                    if (num == 4) {
+                        if (Mode) {
+                            adda = false
+                        } else {
+                            adda = true
+                        }
+                    }//2 饰品1
+                    if (num == 5) {
+                        if (Mode) {
+                            adda = false
+                        } else {
+                            adda = true
+                        }
+                    }//3 饰品2
+                    if (num == 6) {
+                        if (Mode) {
+                            adda = true
+                        } else {
+                            adda = false
+                        }
+                    }//5 饰品3
+                    if (num == 7) {
+                        if (Mode) {
+                            adda = false
+                        } else {
+                            adda = false
+                        }
+                    }//6 饰品4
+                    if (num == 8) {
+                        if (Mode) {
+                            adda = false
+                        } else {
+                            adda = false
+                        }
+                    }//7 饰品5
+                }
+                XINup = adda ? XINT[i] / 100 : 0
+                XIN[num] = ((num > 3 ? 0.025 : 0.125) + Multiply[(num > 3 ? 4 : num)] / 100) * (1 + XINup + YXXINup + ((Mode == false) && (num == 4 || num == 2) ? 1 : (Mode == false ? 0 : BaoFa)) * 0.5)
+            }
+            K = 3 * (1 + XIN[1] + XIN[2] + XIN[3] + XIN[4] + XIN[5] + XIN[6] + XIN[7] + XIN[8] + YING[i] + SHAN[i])
+            K = K.toFixed(4)
+            Score[i] = K
+        }
+        return Score[1];
+    },
+    YXPoint(rank, level) {
+        if (rank == "1") {
+            var Point = [0, 7, 10, 12, 14, 15]
+        }
+        if (rank == "2") {
+            var Point = [0, 11.2, 16, 19.2, 22.4, 24]
+        }
+        if (rank == "3") {
+            var Point = [0, 14, 20, 24, 28, 30]
+        }
+        if (rank == "4") {
+            var Point = [0, 17.5, 25, 30, 35, 37.5]
+        }
+        if (rank == "5") {
+            var Point = [0, 12.6, 18, 21.6, 25.2, 27]
+        }
+        return Point[parseInt(level)]
+    },
+    getPassiveSkill(rank, level, type){
+        var s = 0;
+        switch (rank) {
+            case 1://稀有
+                if (type == 4) {//不是饰品
+                    s = parseInt(level) * 0.2
+                } else {//是饰品
+                    s = parseInt(level)
+                }
+                break;
+            case 2://非凡
+                if (type == 4) {
+                    s = 0.4 * parseInt(level)
+                } else {
+                    s = parseInt(level) * 2
+                }
+                break;
+            case 3://闪耀
+                if (type == 4) {
+                    s = 0.6 + (parseInt(level) - 1) * 0.7
+                    if (parseInt(level) == 4) {
+                        s = s - 0.1
+                    }//修正
+                } else {
+                    s = 3.3 + (parseInt(level) - 1) * 3.4
+                    if (parseInt(level) == 3) {
+                        s = s - 0.1
+                    }
+                    if (parseInt(level) > 3) {
+                        s = s - 0.2
+                    }//修
+                }
+                break;
+        }
+        return s;
+    },
 })
