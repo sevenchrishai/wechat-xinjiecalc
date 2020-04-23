@@ -15,6 +15,10 @@ button{
 }
 picker{
     display: inline-block;
+    padding: 5rpx 10rpx;
+    border-radius: 4rpx;
+    border: 1px solid lightgray;
+    box-shadow: lightgray;
 }
 radio-group{
     text-align: center;

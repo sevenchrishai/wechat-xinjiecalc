@@ -974,89 +974,6 @@ Page({
             'allRoleObj.propRoleVal': _this.data.allPropRoleArr[0].dataName
         })
     },
-    // 卡牌库-是否复苏-change
-    allRoleFusChange(e) {
-        console.log(e)
-        console.log('发生change事件，携带值为', e.detail.value)
-        this.setData({
-            'allRoleObj.isFusu': e.detail.value
-        })
-    },
-    // 卡牌库-角色等级-change
-    allLevelChange(e) {
-        console.log('发生change事件，携带值为', e.detail.value)
-        this.setData({
-            'allRoleObj.roleLevelVal': this.data.allLevelArr[e.detail.value]
-        })
-    },
-    // 卡牌库-角色星级-change
-    allStarChange(e) {
-        console.log('发生change事件，携带值为', e.detail.value)
-        this.setData({
-            'allRoleObj.starVal': e.detail.value
-        })
-    },
-    // 卡牌库-角色馆藏等级-change
-    allGuancChange(e) {
-        console.log('发生change事件，携带值为', e.detail.value)
-        this.setData({
-            'allRoleObj.collectVal': e.detail.value
-        })
-    },
-    // 卡牌库-角色影技等级-change
-    allShadowChange(e) {
-        console.log('发生change事件，携带值为', e.detail.value)
-        this.setData({
-            'allRoleObj.shadowLevelVal': this.data.allShadowLevelArr[e.detail.value]
-        })
-    },
-    // 卡牌库-角色被动技1等级-change
-    allSkill1Change(e) {
-        console.log('发生change事件，携带值为', e.detail.value)
-        this.setData({
-            'allRoleObj.passiveSkillLevelVal1': this.data.allShadowLevelArr[e.detail.value]
-        })
-    },
-    allSkill2Change(e) {
-        console.log('发生change事件，携带值为', e.detail.value)
-        this.setData({
-            'allRoleObj.passiveSkillLevelVal2': this.data.allShadowLevelArr[e.detail.value]
-        })
-    },
-    allSkill3Change(e) {
-        console.log('发生change事件，携带值为', e.detail.value)
-        this.setData({
-            'allRoleObj.passiveSkillLevelVal3': this.data.allShadowLevelArr[e.detail.value]
-        })
-    },
-    // 卡牌库-核心印象-change
-    allCoreImpressionTypeChange(e) {
-        console.log('发生change事件，携带值为', e.detail.value)
-        this.setData({
-            'allRoleObj.coreImpressionTypeVal': this.data.coreImpressionTypeObj[e.detail.value].id,
-            'allRoleObj.coreImpressionTypeValName': this.data.coreImpressionTypeObj[e.detail.value].name,
-        })
-    },
-    allCoreImpressionChange(e) {
-        console.log('发生change事件，携带值为', e.detail.value)
-        this.setData({
-            'allRoleObj.coreImpressionVal': this.data.coreImpressionObj[e.detail.value].id,
-            'allRoleObj.coreImpressionValName': this.data.coreImpressionObj[e.detail.value].name,
-        })
-        if (this.data.allRoleObj.coreImpressionVal == 5){
-            this.setData({
-                'allRoleObj.coreImpressionTypeVal': 1,
-                'allRoleObj.coreImpressionTypeValName': '提供心之技能分数',
-            })
-        }
-    },
-    allCoreImpressionLevelChange(e) {
-        console.log('发生change事件，携带值为', e.detail.value)
-        this.setData({
-            'allRoleObj.coreImpressionLevelVal': this.data.coreImpressionLevelObj[e.detail.value].id,
-            'allRoleObj.coreImpressionLevelValName': this.data.coreImpressionLevelObj[e.detail.value].name,
-        })
-    },
     // 卡牌库-如果localStorage里已存在，获取选中角色的属性对象allRoleObj，否则取初始值;角色-change事件
     getAllRole(e){
         let _this = this;
@@ -1082,6 +999,84 @@ Page({
             })
         }
         console.log('卡牌库-角色属性', _this.data.allRoleObj)
+    },
+    // 卡牌库-change事件
+    allSkillChange(e) {
+        console.log('卡牌库-发生change事件，携带值为', e.detail.value)
+        let type = e.currentTarget.dataset.type
+        switch (type) {
+            // 卡牌库-是否复苏-change
+            case 'isFusu':
+                this.setData({
+                    'allRoleObj.isFusu': e.detail.value
+                })
+                break
+            // 卡牌库-角色等级-change
+            case 'roleLevelVal':
+                this.setData({
+                    'allRoleObj.roleLevelVal': this.data.allLevelArr[e.detail.value]
+                })
+                break
+            // 卡牌库-角色星级-change
+            case 'starVal':
+                this.setData({
+                    'allRoleObj.starVal': e.detail.value
+                })
+                break
+            // 卡牌库-角色馆藏等级-change
+            case 'collectVal':
+                this.setData({
+                    'allRoleObj.collectVal': e.detail.value
+                })
+                break
+            // 卡牌库-角色影技等级-change
+            case 'shadowLevelVal':
+                this.setData({
+                    'allRoleObj.shadowLevelVal': this.data.allShadowLevelArr[e.detail.value]
+                })
+                break
+            // 卡牌库-角色被动技1等级-change
+            case 'passiveSkillLevelVal1':
+                this.setData({
+                    'allRoleObj.passiveSkillLevelVal1': this.data.allShadowLevelArr[e.detail.value]
+                })
+                break
+            case 'passiveSkillLevelVal2':
+                this.setData({
+                    'allRoleObj.passiveSkillLevelVal2': this.data.allShadowLevelArr[e.detail.value]
+                })
+                break
+            case 'passiveSkillLevelVal3':
+                this.setData({
+                    'allRoleObj.passiveSkillLevelVal3': this.data.allShadowLevelArr[e.detail.value]
+                })
+                break
+            // 卡牌库-核心印象-change
+            case 'coreImpressionTypeVal':
+                this.setData({
+                    'allRoleObj.coreImpressionTypeVal': this.data.coreImpressionTypeObj[e.detail.value].id,
+                    'allRoleObj.coreImpressionTypeValName': this.data.coreImpressionTypeObj[e.detail.value].name,
+                })
+                break
+            case 'coreImpressionVal':
+                this.setData({
+                    'allRoleObj.coreImpressionVal': this.data.coreImpressionObj[e.detail.value].id,
+                    'allRoleObj.coreImpressionValName': this.data.coreImpressionObj[e.detail.value].name,
+                })
+                if (this.data.allRoleObj.coreImpressionVal == 5){
+                    this.setData({
+                        'allRoleObj.coreImpressionTypeVal': 1,
+                        'allRoleObj.coreImpressionTypeValName': '提供心之技能分数',
+                    })
+                }
+                break
+            case 'coreImpressionLevelVal':
+                this.setData({
+                    'allRoleObj.coreImpressionLevelVal': this.data.coreImpressionLevelObj[e.detail.value].id,
+                    'allRoleObj.coreImpressionLevelValName': this.data.coreImpressionLevelObj[e.detail.value].name,
+                })
+                break
+        }
     },
     // 通用方法-获取选中角色影子技能和被动技能-初始值
     getAllPassiveSkillVal(roleObj, propRoleArr){

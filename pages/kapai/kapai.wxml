@@ -55,7 +55,7 @@
                         </picker>
                     </view>
                     <view>
-                        <switch type="checkbox" checked="{{allRoleObj.isFusu}}" bindchange="allRoleFusChange"/>复苏
+                        <switch type="checkbox" checked="{{allRoleObj.isFusu}}" bindchange="allSkillChange" data-type="isFusu"/>复苏
                     </view>
                     <view>
                         <text class="guanName">({{makeupData[allRoleObj.propRoleKey][13]}})</text>
@@ -64,7 +64,8 @@
                 <view class="bodysC">
                     <view>
                         <text class="mr-10">等级</text>
-                        <picker bindchange="allLevelChange" value="{{allRoleObj.roleLevelVal}}" range="{{allLevelArr}}">
+                        <picker bindchange="allSkillChange" data-type="roleLevelVal"
+                                value="{{allRoleObj.roleLevelVal}}" range="{{allLevelArr}}">
                             <view class="picker">
                                 {{allRoleObj.roleLevelVal}}
                             </view>
@@ -72,7 +73,8 @@
                     </view>
                     <view>
                         <text class="mr-10">星级</text>
-                        <picker bindchange="allStarChange" value="{{allRoleObj.starVal}}" range="{{starArr}}">
+                        <picker bindchange="allSkillChange" data-type="starVal"
+                                value="{{allRoleObj.starVal}}" range="{{starArr}}">
                             <view class="picker">
                                 {{starArr[allRoleObj.starVal]}}
                             </view>
@@ -80,7 +82,8 @@
                     </view>
                     <view>
                         <text class="mr-10">馆藏</text>
-                        <picker bindchange="allGuancChange" value="{{allRoleObj.collectVal}}" range="{{guanCangLevelArray}}">
+                        <picker bindchange="allSkillChange" data-type="collectVal"
+                                value="{{allRoleObj.collectVal}}" range="{{guanCangLevelArray}}">
                             <view class="picker">
                                 {{allRoleObj.collectVal}}
                             </view>
@@ -92,7 +95,8 @@
                     <view>{{shadowArr[allRoleObj.shadowVal]}}</view>
                     <view>
                         <text class="mr-10">等级</text>
-                        <picker bindchange="allShadowChange" value="{{allRoleObj.shadowLevelVal}}" range="{{allShadowLevelArr}}">
+                        <picker bindchange="allSkillChange" data-type="shadowLevelVal"
+                                value="{{allRoleObj.shadowLevelVal}}" range="{{allShadowLevelArr}}">
                             <view class="picker">
                                 {{allRoleObj.shadowLevelVal}}
                             </view>
@@ -103,7 +107,8 @@
                     <view>被动</view>
                     <view>
                         <text class="mr-10">{{passiveSkillArr[allRoleObj.passiveSkillVal1]}}</text>
-                        <picker bindchange="allSkill1Change" value="{{allRoleObj.passiveSkillLevelVal1}}" range="{{allShadowLevelArr}}">
+                        <picker bindchange="allSkillChange" data-type="passiveSkillLevelVal1"
+                                value="{{allRoleObj.passiveSkillLevelVal1}}" range="{{allShadowLevelArr}}">
                             <view class="picker">
                                 {{allRoleObj.passiveSkillLevelVal1}}
                             </view>
@@ -111,7 +116,8 @@
                     </view>
                     <view>
                         <text class="mr-10">{{passiveSkillArr[allRoleObj.passiveSkillVal2]}}</text>
-                        <picker bindchange="allSkill2Change" value="{{allRoleObj.passiveSkillLevelVal2}}" range="{{allShadowLevelArr}}">
+                        <picker bindchange="allSkillChange" data-type="passiveSkillLevelVal2"
+                                value="{{allRoleObj.passiveSkillLevelVal2}}" range="{{allShadowLevelArr}}">
                             <view class="picker">
                                 {{allRoleObj.passiveSkillLevelVal2}}
                             </view>
@@ -119,7 +125,8 @@
                     </view>
                     <view>
                         <text class="mr-10">{{passiveSkillArr[allRoleObj.passiveSkillVal3]}}</text>
-                        <picker bindchange="allSkill3Change" value="{{allRoleObj.passiveSkillLevelVal3}}" range="{{allShadowLevelArr}}">
+                        <picker bindchange="allSkillChange" data-type="passiveSkillLevelVal3"
+                                value="{{allRoleObj.passiveSkillLevelVal3}}" range="{{allShadowLevelArr}}">
                             <view class="picker">
                                 {{allRoleObj.passiveSkillLevelVal3}}
                             </view>
@@ -129,19 +136,22 @@
                 <view class="bodysC">
                     <view>核心印象</view>
                     <view>
-                        <picker class="mr-10" bindchange="allCoreImpressionTypeChange" value="{{allRoleObj.coreImpressionTypeVal}}"
+                        <picker class="mr-10" bindchange="allSkillChange" data-type="coreImpressionTypeVal"
+                                value="{{allRoleObj.coreImpressionTypeVal}}"
                                 range="{{coreImpressionTypeObj}}" range-key="{{'name'}}">
                             <view class="picker">
                                 {{allRoleObj.coreImpressionTypeValName}}
                             </view>
                         </picker>
-                        <picker class="mr-10" bindchange="allCoreImpressionChange" value="{{allRoleObj.coreImpressionVal}}"
+                        <picker class="mr-10" bindchange="allSkillChange" data-type="coreImpressionVal"
+                                value="{{allRoleObj.coreImpressionVal}}"
                                 range="{{coreImpressionObj}}" range-key="{{'name'}}">
                             <view class="picker">
                                 {{allRoleObj.coreImpressionValName}}
                             </view>
                         </picker>
-                        <picker class="mr-10" bindchange="allCoreImpressionLevelChange" value="{{allRoleObj.coreImpressionLevelVal}}"
+                        <picker class="mr-10" bindchange="allSkillChange" data-type="coreImpressionLevelVal"
+                                value="{{allRoleObj.coreImpressionLevelVal}}"
                                 range="{{coreImpressionLevelObj}}" range-key="{{'name'}}">
                             <view class="picker">
                                 {{allRoleObj.coreImpressionLevelValName}}
