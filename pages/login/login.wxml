@@ -9,5 +9,5 @@
     <button class="loginBtn" wx:if="{{!hasUserInfo && canIUse}}"
             open-type="getUserInfo"
             bindgetuserinfo="getUserInfo">授权登录</button>
-    <button class="loginBtn" wx:else bindtap="toKapai">进入卡牌对比</button>
+    <button class="loginBtn" bindtap="toKapai">进入卡牌对比</button>
 </block>

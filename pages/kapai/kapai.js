@@ -881,17 +881,6 @@ Page({
     },
     onLoad: function () {
         let _this = this
-        // 查看是否授权
-        wx.getSetting({
-           success: res => {
-               if (!res.authSetting['scope.userInfo']) {
-                   // 未登录
-                   wx.redirectTo({
-                       url: 'pages/login/login'
-                   })
-               }
-           }
-        })
         // 获取馆藏
         _this.getCollection()
         // 获取星级
